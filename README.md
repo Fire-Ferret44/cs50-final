@@ -12,21 +12,21 @@ Ultimately, I want this tool to be not just a utility, but a launchpad for deepe
 
 #### Features
 
--Accept user input via CSV uploads or web forms (planned)
--Automatically generate optimized, balanced rosters that can be edited
--Enforce constraints like fair hour distribution, senior/junior pairing, weekend preferences, etc.
--Output metadata summaries (e.g. total hours, weekend shifts, preference matches)
--Plan for secure, multi-user access via unique room keys
--Export final rosters to CSV or printable formats
--Future plan: fully interactive front-end web app (Flask-based)
+- Accept user input via CSV uploads or web forms (planned)
+- Automatically generate optimized, balanced rosters that can be edited
+- Enforce constraints like fair hour distribution, senior/junior pairing, weekend preferences, etc.
+- Output metadata summaries (e.g. total hours, weekend shifts, preference matches)
+- Plan for secure, multi-user access via unique room keys
+- Export final rosters to CSV or printable formats
+- Future plan: fully interactive front-end web app (Flask-based)
 
-### Technologies Used
+#### Technologies Used
 
--WSL (Ubuntu): running Linux tools on Windows
--VS Code: development environment
--Python: core backend logic, scheduling algorithms
--SQLite: storing data
--Flask: lightweight web framework (planned)
--JavaScript / HTML – for front-end functionality (planned)
--Bootstrap / CSS – front-end styling (planned)
--Git / GitHub– version control and collaboration
+- WSL (Ubuntu): running Linux tools on Windows
+- VS Code: development environment
+- Python: core backend logic, scheduling algorithms
+- SQLite: storing data
+- Flask: lightweight web framework (planned)
+- JavaScript / HTML: for front-end functionality (planned)
+- Bootstrap / CSS: front-end styling (planned)
+- Git / GitHub: version control and collaboration
