@@ -124,7 +124,7 @@ This core backend component is responsible for producing optimized, fair, and co
   - Maximum and minimum working hours
   - Leave days, religious observances
   - Post-call "cool-off" period - rested before next call
-  - Seniority requirements (e.g., pairing juniors with seniors)
+  - Seniority requirements (e.g. pairing juniors with seniors)
   - Sick cover
 
 - Inter-person consideration:
@@ -137,6 +137,7 @@ This core backend component is responsible for producing optimized, fair, and co
   - Request for specific day/weekend
   - Request for NOT specific day/weekend (How many requests viable?)
   - Weekend preference: FRI/SUN, SAT or None
+  - Month-wide preference: most shifts beginning of month, end of month, or evenly distributed throughout month
 
 - Support “soft constraints” where some preferences can be violated with penalties
 - Ensure equitable distribution of workload over multiple scheduling periods (if metadata is entered)
@@ -188,4 +189,4 @@ Perhaps some admins like the autonomy of making rosters manually. It would be a 
 
 ## Security & Privacy
 
--
+- [Watch this space]
