@@ -141,4 +141,55 @@ Satisfiability Modulo Theories (SMT)
 
 Today some more theory around this problem and making a plan for a solution I want to try. Likely involving combination of approaches. Initial and thern for optimisation. 
 
+### Heuristic Assignment
+- Most Constrained Variable First
+- Minimum Remaining Values for variables
+
+Constraint Graphs
+Arc Consistency
+Force pruning
+
+### Constraint Propagation
+-Reducing Domain size before search...
+**Node Consistency**
+Arc Consistency
+--> AC-3, AC-4, AC-2001
+Path Consistency
+Forward Checking
+Constraint Propagation with GAC
+
+### Backtracking Search
+
+### Heuristics
+
+### Local Search and Metaheuristics
+
+### Optimisation-based
+
+Initial thoughts: Combination of different models. E.g. start with Node Consistency and shrink domains to only value that don't violated hard constraints that can be easily mapped (e.g. leave)
+Then start with most constrained, then minimum remaingin values
+Then could start with random assignment of the rest and do min-conflicts or do genetic algorithms
+The integer programmnig solution would have been interesting to learnin about, but not feasible right now.
+
+## 20 June 2025 
+
+Algorithm think-throughs continue
+
+-Another big CSP timetabling problem is airline crews! I did not think about that. (Not something to think about doing, but I think they will have very refined algorithms looking for almost perfect solutions)
+
+### Complexity Classes
+Summary from geeksforgeeks:
+*P*	Easily solvable in polynomial time.
+*NP*	Yes, answers can be checked in polynomial time.
+*Co-NP*	No, answers can be checked in polynomial time.
+*NP-hard*	All NP-hard problems are not in NP and it takes a long time to check them.
+*NP-complete*	A problem that is NP and NP-hard is NP-complete.
+
+My problem is NP-hard. Lekker
+
+### Practise
+
+Running some practise scenarios in new dir "algorithmarium" to understand how pulp works.
+
+
 
