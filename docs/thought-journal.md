@@ -191,5 +191,22 @@ My problem is NP-hard. Lekker
 
 Running some practise scenarios in new dir "algorithmarium" to understand how pulp works.
 
+Was pretty easy to write some stuff out manually and get results for small set. Might be difficult to scale, but could be done if the preferences are save well in easily accessible dictionaries or in classes and loops run through?
 
+## 21 July 2025
 
+Ramp up the speed a bit. Make some bigger practise data for a month in a data input folder and then write the framework to parse the csv files and saving the output. Even if the algorithm details are a bit later and that can be polished up. Will have the biggest return on investment for time. Guess we leaving the sql database idea for now possibly.
+
+## 22 July 2025
+
+Break
+
+## 23 July 2025
+
+Reviewing parsing csv into python files and then setting up how I will handle the data. 
+
+Finished the input files. Decided would be nice to go with classes for the doctors, a class for the shifts (lenghths, how many on duty etc). Made a test folder to test various files manually for debugging. Doctor class work for the manual input. Now can be looped in the load_inputs file from the csv.
+
+## 24 July 2025
+
+doctor csv, shift class
