@@ -2,7 +2,7 @@
 Tests the doctor class manually.
 """
 
-from utility.doctor import Doctor
+from data.utility.doctor import Doctor
 
 def manual_doctor_test():
     doc = Doctor(name="Dr. Ead", experience_level="junior")
