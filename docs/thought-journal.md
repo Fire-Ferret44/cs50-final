@@ -207,6 +207,19 @@ Reviewing parsing csv into python files and then setting up how I will handle th
 
 Finished the input files. Decided would be nice to go with classes for the doctors, a class for the shifts (lenghths, how many on duty etc). Made a test folder to test various files manually for debugging. Doctor class work for the manual input. Now can be looped in the load_inputs file from the csv.
 
+Update on the shift structure: Might need to be more generalised. E.g. Mon to Thur are exactly the same and can work as "weekday" blueprint. Fri, Sat and Sun will each be their own blue print potentially. And public holiday will either act as a Sun or Sat. Depending what day it is followed by. (Mon-Friday or Sat respectively). And the day preceding the public holiday will move from weekday --> friday or Sun --> Sat. 
+
 ## 24 July 2025
 
-doctor csv, shift class
+doctor upload function, shift class, seperate file and classes for how different days behave. Will need to map the string preferences to workable data types for the algorithm.
+
+## 25 July 2025
+
+So far have the following classes under utility:
+-DayType, Doctor, ShiftCalendar, ShiftStructure, Shift
+
+Following csv files under input:
+-doctors, leave, pairing_constraints, preferences, public_holidays_2025, schedule_period, shift_structure
+
+Following functions under load_inputs file:
+-parse_date, generate_date_range, load_doctors, load_shift_structure, load_public_holidays, load_schedule_period, build_schedule_calendar
