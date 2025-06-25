@@ -3,9 +3,15 @@ Loads data from csv files into the classes for doctors and shifts.
 """
 
 from pathlib import Path
+from calendar import monthrange
 import csv
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 from utility.doctor import Doctor
+from utility.shift import Shift
+from utility.day_type import DayType
+from utility.shift_structure import ShiftStructure
+from utility.shift_calendar import ShiftCalendar
+
 
 base_path = Path("data/input") # Defines path to input data folder
 
@@ -30,11 +36,38 @@ def generate_date_range(start_date, end_date):
         current += timedelta(days=1)
     return dates
 
+def is_valid_weekend_range(start_date, end_date):
+    return start_date.weekday() == 4 and end_date.weekday() == 6  # Fri to Sun
+
+def get_month_distribution_dates(tag: str, start: date, end: date) -> list[date] | str | None:
+    tag = tag.lower()
+    if tag in ("even", "balanced"):
+        return "balanced"
+    
+    distribution_dates = []
+    current = start
+
+    while current <= end:
+        last_day = monthrange(current.year, current.month)[1]
+        match tag:
+            case "beg":
+                if 1 <= current.day <= 15:
+                    distribution_dates.append(current)
+            case "mid":
+                if 8 <= current.day <= 23:
+                    distribution_dates.append(current)
+            case "end":
+                if 16 <= current.day <= last_day:
+                    distribution_dates.append(current)
+        current += timedelta(days=1)
+
+    return distribution_dates if distribution_dates else None
+
 # def doctors_by_experience_level(doctors: dict, level: str) -> list:
 #     # Generates a list of doctors with certain experience level
 #     return [name for name, doc in doctors.items() if doc.experience_level == level.lower()]
 
-def load_doctors(path: Path) -> dict:
+def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dict:
     doctors = {}
     # Load doctors and experience level
     seniors = []
@@ -47,6 +80,7 @@ def load_doctors(path: Path) -> dict:
             name = row["doctor"]
             experience_level = row["experience_level"].lower()
             doctors[name] = Doctor(name=name, experience_level=experience_level)
+            doctors[name].no_leave_dates = 0  # Initialize leave dates count here outside leave def
             if experience_level == "senior":
                 seniors.append(name)
             elif experience_level == "junior":
@@ -60,10 +94,7 @@ def load_doctors(path: Path) -> dict:
             start_date = parse_date(row["start_date"])
             end_date = parse_date(row["end_date"])
             leave_dates = generate_date_range(start_date, end_date)
-            if leave_dates:
-                no_leave_dates = len(leave_dates)
-            else:
-                no_leave_dates = 0
+            no_leave_dates = len(leave_dates)
             if name in doctors:
                 doctors[name].add_leave_date(leave_dates)
                 doctors[name].no_leave_dates = no_leave_dates
@@ -78,12 +109,43 @@ def load_doctors(path: Path) -> dict:
                 continue
             doctor = doctors[name]
 
-            # Simple fields
-            doctor.preferences["prefer_weekday_off"] = row["prefer_weekday_off"]
-            doctor.preferences["prefer_not_weekend_dates"] = row["prefer_not_weekend_dates"]
-            doctor.preferences["prefer_not_weekend_range"] = row["prefer_not_weekend_range"]
-            doctor.preferences["prefer_distribution_weekend"] = row["prefer_distribution_weekend"]
-            doctor.preferences["prefer_distribution_month"] = row["prefer_distribution_month"]
+            # Prefer to avoid a specific weekend
+            if row["prefer_not_weekend_dates"]:
+                try:
+                    start_str, end_str = row["prefer_not_weekend_dates"].split(",")
+                    start_date = parse_date(start_str.strip())
+                    end_date = parse_date(end_str.strip())
+        
+                    if not is_valid_weekend_range(start_date, end_date):
+                        print(f"Warning: Invalid weekend range for {name}: {start_date} to {end_date}")
+                    else:
+                        doctor.preferences["avoid_weekend"] = generate_date_range(start_date, end_date)
+
+                except ValueError as e:
+                    print(f"Invalid date format for avoid_weekend in {name}: {e}")
+                except KeyError as e:
+                    print(f"Missing expected column while parsing avoid_weekend for {name}: {e}")
+
+            # Prefer to avoid one specific weekday
+            if row["prefer_not_weekday"]:
+                try:
+                    doctor.preferences["avoid_day"] = parse_date(row["prefer_not_weekday"].strip())
+                except ValueError as e:
+                    print(f"Invalid date format for avoid_day in {name}: {e}")
+                except KeyError as e:
+                    print(f"Missing expected column while parsing avoid_day for {name}: {e}")
+
+            # Prefer how weekends are distributed (as string: "fri-sun", "sat", "none")
+            doctor.preferences["prefer_distribution_weekend"] = row["prefer_distribution_weekend"].strip().lower()
+
+            # Prefer distribution over the month
+            month_pref = row["prefer_distribution_month"].strip().lower()
+            if month_pref:
+                doctor.preferences["prefer_distribution_month"] = get_month_distribution_dates(month_pref, start_date, end_date)
+            else:
+                doctor.preferences["prefer_distribution_month"] = None
+            
+            # Notes
             doctor.preferences["notes"] = row["notes"]
 
     # Load pairing constraints
@@ -107,3 +169,46 @@ def load_doctors(path: Path) -> dict:
                     doctors[doc1].requires_pair.append(doc2)
 
     return doctors
+
+def load_shift_structure(path: Path) -> ShiftStructure:
+    # Load shift structure from csv
+    shift_structure = ShiftStructure()
+    
+    with open(path, newline='', encoding='utf-8') as file:
+        reader = csv.DictReader(file)
+        for row in reader:
+            shift = Shift(
+                day=row["day"],
+                shift_type=row["shift_type"],
+                start_time=row["start_time"],
+                end_time=row["end_time"],
+                hours=int(row["hours"]),
+                required_staff=int(row["required_staff"])
+            )
+            shift_structure.add_shift(shift)
+
+    return shift_structure
+
+def load_public_holidays(path: Path) -> list[date]:
+    holidays = []
+    with open(path, newline='', encoding='utf-8') as file:
+        for line in file:
+            line = line.strip()
+            if line:
+                holidays.append(datetime.strptime(line, "%d-%m-%Y").date())
+    
+    return holidays
+
+def load_schedule_period(path: Path) -> tuple[date, date]:
+    with open(path, newline='', encoding='utf-8') as file:
+        line = next(file).strip()
+        start_str, end_str = line.split(',')
+        start_date = datetime.strptime(start_str, "%d-%m-%Y").date()
+        end_date = datetime.strptime(end_str, "%d-%m-%Y").date()
+        return start_date, end_date
+
+def build_schedule_calendar(start_date, end_date, shift_structure, public_holidays):
+    resolver = DayType(public_holidays)
+    calendar = ShiftCalendar(start_date, end_date, shift_structure, resolver)
+    calendar.build_calendar()
+    return calendar
