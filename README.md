@@ -34,6 +34,7 @@ Ultimately, I want this tool to be not just a utility, but a launchpad for deepe
 
 ## Project Structure
 
+```
 cs50-final/
 ├── .gitignore
 ├── app.py
@@ -70,8 +71,8 @@ cs50-final/
 │   │   └── week1_basic_model.py 
 │   └── test_doctor.py
 
-
 ├── docs/
 │   └── thought-journal.md
 
 ├── venv/
+```
