@@ -6,22 +6,12 @@ from pathlib import Path
 from calendar import monthrange
 import csv
 from datetime import date, datetime, timedelta
+
 from utility.doctor import Doctor
 from utility.shift import Shift
 from utility.day_type import DayType
 from utility.shift_structure import ShiftStructure
 from utility.shift_calendar import ShiftCalendar
-
-
-base_path = Path("data/input") # Defines path to input data folder
-
-input_paths = {
-    "doctors_csv": base_path / "doctors.csv",
-    "leave": base_path / "leave.csv",
-    "pairing_constraints": base_path / "pairing_constraints.csv",
-    "preferences": base_path / "preferences.csv",
-    "shift_structure": base_path / "shift_structure.csv"
-}
 
 def parse_date(date_str):
     # Converts 'DD-MM-YYYY' to datetime.date
@@ -43,7 +33,7 @@ def get_month_distribution_dates(tag: str, start: date, end: date) -> list[date]
     tag = tag.lower()
     if tag in ("even", "balanced"):
         return "balanced"
-    
+
     distribution_dates = []
     current = start
 
@@ -67,18 +57,23 @@ def get_month_distribution_dates(tag: str, start: date, end: date) -> list[date]
 #     # Generates a list of doctors with certain experience level
 #     return [name for name, doc in doctors.items() if doc.experience_level == level.lower()]
 
-def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dict:
+def load_doctors(
+    doctors_path: Path,
+    leave_path: Path,
+    preferences_path: Path,
+    pairing_constraints_path: Path
+) -> dict:
     doctors = {}
     # Load doctors and experience level
     seniors = []
     juniors = []
 
-    with open(path["doctors_csv"], newline='', encoding='utf-8') as file:
+    with open(doctors_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
 
         for row in reader:
             name = row["doctor"]
-            experience_level = row["experience_level"].lower()
+            experience_level = row["level"].lower()
             doctors[name] = Doctor(name=name, experience_level=experience_level)
             doctors[name].no_leave_dates = 0  # Initialize leave dates count here outside leave def
             if experience_level == "senior":
@@ -87,7 +82,7 @@ def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dic
                 juniors.append(name)
     
     # Load leave dates
-    with open(path["leave"], newline='', encoding='utf-8') as file:
+    with open(leave_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             name = row["doctor"]
@@ -101,7 +96,7 @@ def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dic
 
 
     # Load preferences
-    with open(path["preferences"], newline='', encoding='utf-8') as file:
+    with open(preferences_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             name = row["doctor"]
@@ -110,12 +105,12 @@ def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dic
             doctor = doctors[name]
 
             # Prefer to avoid a specific weekend
-            if row["prefer_not_weekend_dates"]:
+            if row["avoid_weekend"]:
                 try:
-                    start_str, end_str = row["prefer_not_weekend_dates"].split(",")
-                    start_date = parse_date(start_str.strip())
-                    end_date = parse_date(end_str.strip())
-        
+                    date_str = row["avoid_weekend"].strip()
+                    start_date = parse_date(date_str.strip())
+                    end_date = start_date + timedelta(days=2)
+
                     if not is_valid_weekend_range(start_date, end_date):
                         print(f"Warning: Invalid weekend range for {name}: {start_date} to {end_date}")
                     else:
@@ -127,9 +122,9 @@ def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dic
                     print(f"Missing expected column while parsing avoid_weekend for {name}: {e}")
 
             # Prefer to avoid one specific weekday
-            if row["prefer_not_weekday"]:
+            if row["avoid_day"]:
                 try:
-                    doctor.preferences["avoid_day"] = parse_date(row["prefer_not_weekday"].strip())
+                    doctor.preferences["avoid_day"] = parse_date(row["avoid_day"].strip())
                 except ValueError as e:
                     print(f"Invalid date format for avoid_day in {name}: {e}")
                 except KeyError as e:
@@ -144,12 +139,12 @@ def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dic
                 doctor.preferences["prefer_distribution_month"] = get_month_distribution_dates(month_pref, start_date, end_date)
             else:
                 doctor.preferences["prefer_distribution_month"] = None
-            
+
             # Notes
             doctor.preferences["notes"] = row["notes"]
 
     # Load pairing constraints
-    with open(path["pairing_constraints"], newline='', encoding='utf-8') as file:
+    with open(pairing_constraints_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             doc1 = row["doctor_1"]
@@ -170,11 +165,11 @@ def load_doctors(path: dict[str, Path], start_date: date, end_date: date) -> dic
 
     return doctors
 
-def load_shift_structure(path: Path) -> ShiftStructure:
+def load_shift_structure(shift_structure_path: Path) -> ShiftStructure:
     # Load shift structure from csv
     shift_structure = ShiftStructure()
-    
-    with open(path, newline='', encoding='utf-8') as file:
+
+    with open(shift_structure_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             shift = Shift(
@@ -189,18 +184,18 @@ def load_shift_structure(path: Path) -> ShiftStructure:
 
     return shift_structure
 
-def load_public_holidays(path: Path) -> list[date]:
+def load_public_holidays(public_holidays_path: Path) -> list[date]:
     holidays = []
-    with open(path, newline='', encoding='utf-8') as file:
-        for line in file:
-            line = line.strip()
-            if line:
-                holidays.append(datetime.strptime(line, "%d-%m-%Y").date())
-    
+    with open(public_holidays_path, newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader, None) # skip header
+        for row in reader:
+            if row and row[0].strip():
+                holidays.append(datetime.strptime(row[0].strip(), "%d-%m-%Y").date())
     return holidays
 
-def load_schedule_period(path: Path) -> tuple[date, date]:
-    with open(path, newline='', encoding='utf-8') as file:
+def load_schedule_period(schedule_period_path: Path) -> tuple[date, date]:
+    with open(schedule_period_path, newline='', encoding='utf-8') as file:
         line = next(file).strip()
         start_str, end_str = line.split(',')
         start_date = datetime.strptime(start_str, "%d-%m-%Y").date()

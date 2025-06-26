@@ -16,4 +16,3 @@ class Shift:
         return (f"Shift(day={self.day}, type={self.shift_type}, "
                 f"start={self.start_time}, end={self.end_time}, "
                 f"hours={self.hours}, staff={self.required_staff})")
-

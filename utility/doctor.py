@@ -50,3 +50,9 @@ class Doctor:
 
         else:
             raise ValueError(f"Invalid constraint type: {constraint_type}")
+    
+    def __repr__(self):
+        return (f"Doctor(name='{self.name}', experience_level='{self.experience_level}', "
+                f"leave_dates={self.leave_dates}, no_leave_dates={self.no_leave_dates}, "
+                f"preferences={self.preferences})"
+                f", requires_pair={self.requires_pair}, avoid_pair={self.avoid_pair})")

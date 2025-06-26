@@ -28,14 +28,14 @@ class ShiftStructure:
 
                 shift = Shift(day, shift_type, start_time, end_time, hours, required_staff)
                 self.shifts_by_day[day].append(shift)
-    
+
     def add_shift(self, shift: Shift):
         self.shifts_by_day[shift.day.lower()].append(shift)
 
     def get_shifts_for_day(self, day_type: str) -> List[Shift]:
         """Return the list of shifts for the given day_type string."""
         return self.shifts_by_day.get(day_type.lower(), [])
-    
+
     def all_shifts(self) -> List[Shift]:
         return [shift for shifts in self.shifts_by_day.values() for shift in shifts]
 
