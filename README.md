@@ -30,3 +30,48 @@ Ultimately, I want this tool to be not just a utility, but a launchpad for deepe
 - JavaScript / HTML: for front-end functionality (planned)
 - Bootstrap / CSS: front-end styling (planned)
 - Git / GitHub: version control and collaboration
+
+
+## Project Structure
+
+cs50-final/
+├── .gitignore
+├── app.py
+├── main.py
+├── DESIGN.md
+├── README.md
+
+├── data/
+│   ├── input/
+│   │   ├── doctors.csv
+│   │   ├── leave.csv
+│   │   ├── pairing_constraints.csv
+│   │   ├── preferences.csv
+│   │   ├── public_holidays_2025.csv
+│   │   ├── schedule_period.csv
+│   │   └── shift_structure.csv
+│   └── __init__.py
+
+├── scheduler/
+│   ├── __init__.py
+│   └── scheduler.py
+
+├── utility/
+│   ├── __init__.py
+│   ├── day_type.py
+│   ├── doctor.py
+│   ├── load_inputs.py
+│   ├── shift.py
+│   ├── shift_calendar.py
+│   └── shift_structure.py
+
+├── tests/
+│   ├── algorithmarium/
+│   │   └── week1_basic_model.py 
+│   └── test_doctor.py
+
+
+├── docs/
+│   └── thought-journal.md
+
+├── venv/
