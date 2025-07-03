@@ -193,15 +193,15 @@ Running some practise scenarios in new dir "algorithmarium" to understand how pu
 
 Was pretty easy to write some stuff out manually and get results for small set. Might be difficult to scale, but could be done if the preferences are save well in easily accessible dictionaries or in classes and loops run through?
 
-## 21 July 2025
+## 21 June 2025
 
 Ramp up the speed a bit. Make some bigger practise data for a month in a data input folder and then write the framework to parse the csv files and saving the output. Even if the algorithm details are a bit later and that can be polished up. Will have the biggest return on investment for time. Guess we leaving the sql database idea for now possibly.
 
-## 22 July 2025
+## 22 June 2025
 
 Break
 
-## 23 July 2025
+## 23 June 2025
 
 Reviewing parsing csv into python files and then setting up how I will handle the data. 
 
@@ -209,11 +209,11 @@ Finished the input files. Decided would be nice to go with classes for the docto
 
 Update on the shift structure: Might need to be more generalised. E.g. Mon to Thur are exactly the same and can work as "weekday" blueprint. Fri, Sat and Sun will each be their own blue print potentially. And public holiday will either act as a Sun or Sat. Depending what day it is followed by. (Mon-Friday or Sat respectively). And the day preceding the public holiday will move from weekday --> friday or Sun --> Sat. 
 
-## 24 July 2025
+## 24 June 2025
 
 doctor upload function, shift class, seperate file and classes for how different days behave. Will need to map the string preferences to workable data types for the algorithm.
 
-## 25 July 2025
+## 25 June 2025
 
 So far have the following classes under utility:
 -DayType, Doctor, ShiftCalendar, ShiftStructure, Shift
@@ -223,3 +223,22 @@ Following csv files under input:
 
 Following functions under load_inputs file:
 -parse_date, generate_date_range, load_doctors, load_shift_structure, load_public_holidays, load_schedule_period, build_schedule_calendar
+
+## 26 June 2025
+
+Rearrange folders for better grouping. 
+Focus on Input --> CSV --> Output to work on bigger structure flask and metadata. Then return to algorithm and work on the inner workings work.
+Random scheduler to assign someone to every day. Bug fixed where only Fri, Sat, Sun were assigned. (Other days got confounded with day type and didn't get assigned.)
+
+## 27 June 2025
+
+...
+
+## 28 June 2025
+
+Continue working on basic data flow, flask and metadata for something to showcase in the demo video. 
+
+## 29 June - 02 July 2025
+
+Break
+
