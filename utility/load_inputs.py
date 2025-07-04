@@ -14,11 +14,11 @@ from utility.shift_structure import ShiftStructure
 from utility.shift_calendar import ShiftCalendar
 
 def parse_date(date_str):
-    # Converts 'DD-MM-YYYY' to datetime.date
+    """ Converts 'DD-MM-YYYY' to datetime.date """
     return datetime.strptime(date_str, "%d-%m-%Y").date()
 
 def generate_date_range(start_date, end_date):
-    # Generates a list of all dates from start_date to end_date inclusive
+    """ Generates a list of all dates from start_date to end_date inclusive """
     current = start_date
     dates = []
     while current <= end_date:
@@ -27,12 +27,14 @@ def generate_date_range(start_date, end_date):
     return dates
 
 def is_valid_weekend_range(start_date, end_date):
-    return start_date.weekday() == 4 and end_date.weekday() == 6  # Fri to Sun
+    """ Checks if Fri (4) to Sun (6) """
+    return start_date.weekday() == 4 and end_date.weekday() == 6
 
 def get_month_distribution_dates(tag: str, start: date, end: date) -> list[date] | str | None:
+    """ Gets range of dates based on preference """
     tag = tag.lower()
-    if tag in ("even", "balanced"):
-        return "balanced"
+    if tag in ("even"):
+        return "even"
 
     distribution_dates = []
     current = start
@@ -63,8 +65,8 @@ def load_doctors(
     preferences_path: Path,
     pairing_constraints_path: Path
 ) -> dict:
+    """Loads doctors and their attributes"""
     doctors = {}
-    # Load doctors and experience level
     seniors = []
     juniors = []
 
@@ -80,8 +82,8 @@ def load_doctors(
                 seniors.append(name)
             elif experience_level == "junior":
                 juniors.append(name)
-    
-    # Load leave dates
+
+    """ Loads leave dates """
     with open(leave_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -95,7 +97,7 @@ def load_doctors(
                 doctors[name].no_leave_dates = no_leave_dates
 
 
-    # Load preferences
+    """Loads preferences"""
     with open(preferences_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -112,7 +114,7 @@ def load_doctors(
                     end_date = start_date + timedelta(days=2)
 
                     if not is_valid_weekend_range(start_date, end_date):
-                        print(f"Warning: Invalid weekend range for {name}: {start_date} to {end_date}")
+                        print(f"Invalid weekend range for {name}: {start_date} to {end_date}")
                     else:
                         doctor.preferences["avoid_weekend"] = generate_date_range(start_date, end_date)
 
@@ -143,7 +145,7 @@ def load_doctors(
             # Notes
             doctor.preferences["notes"] = row["notes"]
 
-    # Load pairing constraints
+    # Loads pairing constraints
     with open(pairing_constraints_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -152,6 +154,7 @@ def load_doctors(
             constraint = row["type"].strip().lower()
 
             if doc1 not in doctors:
+                print(f"Doctor {doc1} not found in doctors list. Skipping constraint.")
                 continue
 
             if constraint == "avoid_pair":
@@ -166,7 +169,7 @@ def load_doctors(
     return doctors
 
 def load_shift_structure(shift_structure_path: Path) -> ShiftStructure:
-    # Load shift structure from csv
+    """Loads shift structure from csv"""
     shift_structure = ShiftStructure()
 
     with open(shift_structure_path, newline='', encoding='utf-8') as file:
@@ -185,6 +188,7 @@ def load_shift_structure(shift_structure_path: Path) -> ShiftStructure:
     return shift_structure
 
 def load_public_holidays(public_holidays_path: Path) -> list[date]:
+    """Loads public holidays form csv"""
     holidays = []
     with open(public_holidays_path, newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
@@ -195,7 +199,10 @@ def load_public_holidays(public_holidays_path: Path) -> list[date]:
     return holidays
 
 def load_schedule_period(schedule_period_path: Path) -> tuple[date, date]:
+    """Loads schedule period from csv"""
     with open(schedule_period_path, newline='', encoding='utf-8') as file:
+        reader = csv.reader(file)
+        next(reader, None)  # skip header
         line = next(file).strip()
         start_str, end_str = line.split(',')
         start_date = datetime.strptime(start_str, "%d-%m-%Y").date()
@@ -203,7 +210,37 @@ def load_schedule_period(schedule_period_path: Path) -> tuple[date, date]:
         return start_date, end_date
 
 def build_schedule_calendar(start_date, end_date, shift_structure, public_holidays):
+    """Builds a schedule calendar i.e. calendar of schedule period"""
     resolver = DayType(public_holidays)
     calendar = ShiftCalendar(start_date, end_date, shift_structure, resolver)
     calendar.build_calendar()
     return calendar
+
+
+def load_shift_calendar(data_path: Path) -> ShiftCalendar:
+    """Builds a shift calendar i.e. number and type of shifts that need to be filled"""
+    with open(data_path / 'schedule_period.csv', newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        row = next(reader)
+        start_date = datetime.strptime(row['start_date'], '%d-%m-%Y').date()
+        end_date = datetime.strptime(row['end_date'], '%d-%m-%Y').date()
+
+    shift_structure = ShiftStructure()
+    shift_structure.load_from_csv(data_path / 'shift_structure.csv')
+
+    public_holidays = []
+    with open(data_path / 'public_holidays_2025.csv', newline='', encoding='utf-8') as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            public_holidays.append(datetime.strptime(row['date'], '%d-%m-%Y').date())
+
+    day_type = DayType(public_holidays)
+
+    shift_calendar = ShiftCalendar(
+        start_date=start_date,
+        end_date=end_date,
+        shift_structure=shift_structure,
+        day_type=day_type
+    )
+
+    return shift_calendar

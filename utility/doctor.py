@@ -7,7 +7,7 @@ from datetime import date
 from typing import List, Dict, Union
 
 class Doctor:
-
+    """Class representing a doctor with attributes and methods for managing shifts and preferences."""
     def __init__(self, name: str, experience_level: str):
         self.name: str = name
         self.experience_level: str = experience_level

@@ -12,6 +12,7 @@ from utility.shift import Shift
 
 
 class ShiftCalendar:
+    """Class for shifts over schedule period in calendar dates"""
     def __init__(self, start_date: date, end_date: date,
                  shift_structure: ShiftStructure,
                  day_type: DayType):
@@ -24,13 +25,16 @@ class ShiftCalendar:
         self.build_calendar()
 
     def build_calendar(self) -> None:
+        """Builds the calendar for the given date range"""
         current = self.start_date
         while current <= self.end_date:
             day_type = self.day_type.get_day_type(current)
-            shifts: List[Shift] = self.shift_structure.get_shifts_for_day_type(day_type)
+            dow = current.strftime("%A").lower()
+            shifts: List[Shift] = self.shift_structure.get_shifts_for_day(current)
 
             self.calendar[current] = {
                 "day_type": day_type,
+                "dow" : dow,
                 "shifts": shifts,
                 "assigned": {shift.shift_type: [] for shift in shifts}  # Initially empty
             }
@@ -38,7 +42,9 @@ class ShiftCalendar:
             current += timedelta(days=1)
 
     def get_day(self, dt: date) -> Dict:
+        """Returns calendar date"""
         return self.calendar.get(dt, {})
 
     def __repr__(self):
+        """Shift calendar representation"""
         return f"ShiftCalendar({len(self.calendar)} days from {self.start_date} to {self.end_date})"
