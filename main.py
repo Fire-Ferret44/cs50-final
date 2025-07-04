@@ -1,10 +1,17 @@
-# main.py
+"""Main entry point for workings of app."""
+
 from pathlib import Path
-from utility.load_inputs import load_doctors, load_shift_structure, load_schedule_period, load_public_holidays
-from scheduler.scheduler import scheduler
+from utility.load_inputs import (
+    load_doctors,
+    load_shift_structure,
+    load_schedule_period,
+    load_public_holidays,
+    load_shift_calendar,
+)
+from scheduler.random_scheduler import run_random_scheduler
 
 def main():
-    # Paths for input data
+    """ Paths for input data """
     base_path = Path("data/input") # Defines path to input data folder
 
     doctors = load_doctors(
@@ -22,12 +29,22 @@ def main():
     for name, doctor in doctors.items():
         print(f"{name}: {doctor}\n")
 
-    # 3. Run the scheduling algorithm
-    print("Running scheduling algorithm...")
 
-    # 4. Output / export the result
-    print("Schedule generated successfully.")
-    # Export schedule here
+
+    data_path = Path("data/input")
+    shift_calendar = load_shift_calendar(data_path)
+
+    # Run the scheduling algorithm
+    print("Running scheduling algorithm...") # Placeholder
+    rostered_calendar = run_random_scheduler(list(doctors.values()), shift_calendar)
+
+    # Output / export the result
+    print("Schedule generated successfully:") # Placeholder
+
+    for day, info in rostered_calendar.calendar.items():
+        print(f"\n{day} ({info['dow']})")
+        for shift_type, assigned in info["assigned"].items():
+            print(f"  - {shift_type}: {', '.join(assigned) or 'None'}")
 
 if __name__ == "__main__":
     main()
