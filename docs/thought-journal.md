@@ -238,7 +238,21 @@ Random scheduler to assign someone to every day. Bug fixed where only Fri, Sat, 
 
 Continue working on basic data flow, flask and metadata for something to showcase in the demo video. 
 
-## 29 June - 02 July 2025
+## 29 June - 23 July 2025
 
 Break
 
+## 24 July 2025
+
+Return to project!
+
+View issues raised by SE-KLING:
+1. add requirements.txt for dependency management
+2. consider adding setup.py (package manager for python so others can setup and use easier)
+3. update project structure to more standard organisation
+
+1. yes! To be added when complete with project
+2. watch tutorial how best to do this - possibly better to do when I have full pipeline to work on
+3. yes! Work on changing this and then carry on working from there 
+
+Dive back in and get to grips with concepts again after break. Let's get things done!
