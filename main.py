@@ -1,7 +1,7 @@
 """Main entry point for workings of app."""
 
 from pathlib import Path
-from utility.load_inputs import (
+from services.load_inputs import (
     load_doctors,
     load_shift_structure,
     load_schedule_period,

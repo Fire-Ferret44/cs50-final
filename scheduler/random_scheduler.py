@@ -6,8 +6,8 @@ Output creater to work on the metadata creator & general input --> output interf
 import random
 from datetime import date
 
-from utility.shift_calendar import ShiftCalendar
-from utility.doctor import Doctor
+from models.shift_calendar import ShiftCalendar
+from models.doctor import Doctor
 
 def is_doctor_available(doctor: Doctor, day: date) -> bool:
     

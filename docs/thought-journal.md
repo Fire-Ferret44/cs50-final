@@ -256,3 +256,10 @@ View issues raised by SE-KLING:
 3. yes! Work on changing this and then carry on working from there 
 
 Dive back in and get to grips with concepts again after break. Let's get things done!
+
+Notes re: re-organisation:
+-models folder: class definitions etc? (-> this name will be confusing when there are different schedule models)
+-type folder: type definitions? 
+are the two folders above overlapping?
+-I like load_inputs and load_metadata as names tbc...
+
