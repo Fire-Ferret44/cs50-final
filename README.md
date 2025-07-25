@@ -39,9 +39,9 @@ cs50-final/
 ├── .gitignore
 ├── app.py
 ├── main.py
+├── requirements.txt
 ├── DESIGN.md
 ├── README.md
-
 ├── data/
 │   ├── input/
 │   │   ├── doctors.csv
@@ -52,27 +52,29 @@ cs50-final/
 │   │   ├── schedule_period.csv
 │   │   └── shift_structure.csv
 │   └── __init__.py
-
+├── docs/
+│   └── thought-journal.md
+├── models/
+│   ├── doctor.py
+│   ├── shift_calendar.py
+│   ├── shift_structure.py
+│   └── shift.py
 ├── scheduler/
 │   ├── __init__.py
+│   ├── random_scheduler.py
 │   └── scheduler.py
-
-├── utility/
-│   ├── __init__.py
-│   ├── day_type.py
-│   ├── doctor.py
+├── services/
 │   ├── load_inputs.py
-│   ├── shift.py
-│   ├── shift_calendar.py
-│   └── shift_structure.py
-
+│   └── load_metadata.py
 ├── tests/
 │   ├── algorithmarium/
 │   │   └── week1_basic_model.py 
 │   └── test_doctor.py
-
-├── docs/
-│   └── thought-journal.md
-
-├── venv/
+├── types/
+│   └── metadata.py
+├── utility/
+│   ├── __init__.py
+│   ├── calendar_utils.py
+│   └── date_utils.py
+└── venv/
 ```
