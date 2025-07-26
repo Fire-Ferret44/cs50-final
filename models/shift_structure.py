@@ -39,6 +39,14 @@ class ShiftStructure:
         """Return the list of shifts for the given day_type string."""
         dow = dt.strftime('%A').lower()
         return self.shifts_by_day.get(dow.lower(), [])
+    
+    def get_shift_duration(self, shift_type: str) -> float:
+        """Returns the duration of a shift by its type."""
+        for shifts in self.shifts_by_day.values():
+            for shift in shifts:
+                if shift.shift_type == shift_type:
+                    return shift.hours
+        raise ValueError(f"Shift type '{shift_type}' not found in the structure.")
 
     def all_shifts(self) -> List[Shift]:
         """Returns a flat list of all shifts across all days."""
