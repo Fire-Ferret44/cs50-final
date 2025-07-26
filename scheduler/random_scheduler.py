@@ -9,8 +9,7 @@ from datetime import date
 from models.shift_calendar import ShiftCalendar
 from models.doctor import Doctor
 
-def is_doctor_available(doctor: Doctor, day: date) -> bool:
-    
+def is_doctor_available(doctor: Doctor, day: date) -> bool: 
     return day not in doctor.leave_dates
 
 def run_random_scheduler(doctors: list[Doctor], calendar: ShiftCalendar) -> ShiftCalendar:

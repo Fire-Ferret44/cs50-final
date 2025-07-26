@@ -263,3 +263,30 @@ Notes re: re-organisation:
 are the two folders above overlapping?
 -I like load_inputs and load_metadata as names tbc...
 
+## 25 July 2025
+
+Completed restructuring. 
+Append: Short shift can also not follow long shift as the person would be off in that time. 
+Can short shift prepend long shift? Maybe, depends on facility
+
+## 26 July 2025
+
+Created utils for checking existing test files and then creating the following filename number. The test_x_schedule and test_x_metadata (where x is the file number) should have the same number value so they can be compared. Initially there will not be a metadata for each schedule test. 
+
+Also created utils for formatting the schedule into txt that can be saved into a txt file under tests. Each file should have a time stamp in the beginning when the file was generated to refer back to. This same formatting can then also be printed.
+
+Having the metadata which describes the DoctorMetadata class under types did not really make sense to me. I have moved it to where the other classes are described. load_metadata I will then name to metadata_generator and do the logic for calculating metadata here. With the formatter_utils I will then access this metadata_generator info to create the metadata txt output.
+
+### Metadata
+
+To create metadata I can loop through the roster the number of times there are doctors. This will be easier to do and easier to debug. A more efficient way of doing this would be to loop through the roster once and increment the different values for each doctor as you go. This will take less computing time, but I think at this stage that is negligible unless I look at a huge dataset with thousands of doctors and shifts. Even then. It would probably not take too long computationally. Big O order n*m
+
+Once the basic things are done then can have a closer look at more nuanced metadata such as if preferences are granted and what satisfaction weight a preference has. 
+
+Basic pipeline works with random schedule generator! For plan ahead:
+1) continue with basic flask framework (csv input and txt output)
+2) output with nicely formatted calendar
+3) start on the actual scheduler with current data sets
+4) input options on flask
+5) SQL database, input interface for fixed shift settings
+6) Different shift models and scheduler for instance
