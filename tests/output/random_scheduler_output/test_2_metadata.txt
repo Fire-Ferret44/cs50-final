@@ -1,0 +1,121 @@
+Generated on: 2025-07-26 13:48:37
+
+Doctor: A
+  Total Shifts Worked: 1
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 0
+  Saturday Shifts Worked: 0
+  Sunday Shifts Worked: 0
+  Weekend Shifts Worked: 0
+  Total Hours Worked: 4.00
+  Preferences Granted: 0.00
+
+Doctor: B
+  Total Shifts Worked: 7
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 1
+  Saturday Shifts Worked: 0
+  Sunday Shifts Worked: 2
+  Weekend Shifts Worked: 2
+  Total Hours Worked: 88.00
+  Preferences Granted: 0.00
+
+Doctor: C
+  Total Shifts Worked: 3
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 1
+  Saturday Shifts Worked: 0
+  Sunday Shifts Worked: 0
+  Weekend Shifts Worked: 0
+  Total Hours Worked: 12.00
+  Preferences Granted: 0.00
+
+Doctor: D
+  Total Shifts Worked: 5
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 2
+  Saturday Shifts Worked: 2
+  Sunday Shifts Worked: 0
+  Weekend Shifts Worked: 0
+  Total Hours Worked: 60.00
+  Preferences Granted: 0.00
+
+Doctor: E
+  Total Shifts Worked: 4
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 0
+  Saturday Shifts Worked: 1
+  Sunday Shifts Worked: 1
+  Weekend Shifts Worked: 1
+  Total Hours Worked: 76.00
+  Preferences Granted: 0.00
+
+Doctor: F
+  Total Shifts Worked: 6
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 1
+  Saturday Shifts Worked: 2
+  Sunday Shifts Worked: 0
+  Weekend Shifts Worked: 3
+  Total Hours Worked: 84.00
+  Preferences Granted: 0.00
+
+Doctor: G
+  Total Shifts Worked: 5
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 0
+  Saturday Shifts Worked: 0
+  Sunday Shifts Worked: 1
+  Weekend Shifts Worked: 1
+  Total Hours Worked: 80.00
+  Preferences Granted: 0.00
+
+Doctor: H
+  Total Shifts Worked: 10
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 0
+  Saturday Shifts Worked: 0
+  Sunday Shifts Worked: 1
+  Weekend Shifts Worked: 0
+  Total Hours Worked: 110.00
+  Preferences Granted: 0.00
+
+Doctor: I
+  Total Shifts Worked: 4
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 1
+  Saturday Shifts Worked: 0
+  Sunday Shifts Worked: 0
+  Weekend Shifts Worked: 0
+  Total Hours Worked: 46.00
+  Preferences Granted: 0.00
+
+Doctor: J
+  Total Shifts Worked: 2
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 0
+  Saturday Shifts Worked: 1
+  Sunday Shifts Worked: 1
+  Weekend Shifts Worked: 2
+  Total Hours Worked: 48.00
+  Preferences Granted: 0.00
+
+Doctor: K
+  Total Shifts Worked: 8
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 2
+  Saturday Shifts Worked: 1
+  Sunday Shifts Worked: 1
+  Weekend Shifts Worked: 3
+  Total Hours Worked: 102.00
+  Preferences Granted: 0.00
+
+Doctor: L
+  Total Shifts Worked: 7
+  Weekday Shifts Worked: 0
+  Friday Shifts Worked: 0
+  Saturday Shifts Worked: 1
+  Sunday Shifts Worked: 1
+  Weekend Shifts Worked: 0
+  Total Hours Worked: 88.00
+  Preferences Granted: 0.00
