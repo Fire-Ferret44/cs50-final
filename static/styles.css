@@ -1,0 +1,111 @@
+*{
+    text-decoration: none;
+}
+
+body {
+    background-color: white;
+}
+
+.navbar {
+    background-color: rgb(29, 29, 29);
+    color: white;
+    padding: 10px;
+    font-family: Roboto, sans-serif;
+}
+
+.navdiv {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo a{
+    font-size: 35px;
+    font-family: Roboto, sans-serif;
+    font-weight: 600;
+    color: white;
+}
+		
+li {
+    list-style: none;
+    display: inline-block;
+}
+
+li a{
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 25px;
+}
+
+button{
+    background-color: whitesmoke;
+    margin-left: 10px;
+    border-radius: 10px;
+    padding: 10px;
+    width: 90px;
+}
+
+button a{
+    color: black;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.header {
+    background-color: white;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    font-family: Roboto, sans-serif;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+.heading {
+    font-size: 24px;
+    font-weight: bold;
+    color: black;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    font-family: Roboto, sans-serif;
+}
+
+.standard {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 10px;
+    padding: 10px;
+    font-family: Roboto, sans-serif;
+}
+
+.list {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+    margin: 30px;
+    font-family: Roboto, sans-serif;
+}
+
+.example {
+    background-color: white;
+    color: black;
+    font-size: 16px;
+    font-weight: 300;
+    font-style: italic;
+    margin: 30px;
+    font-family: Roboto, sans-serif;
+}
+
+.footer {
+    color: rgb(29, 29, 29);
+    text-align: center;
+    font-family: Roboto, sans-serif;
+    padding: 10px;
+    width: 100%;
+    bottom: 0;
+}

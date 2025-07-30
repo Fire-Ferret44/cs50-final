@@ -1,0 +1,17 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    : Apology
+{% endblock %}
+
+{% block main %}
+    <header class="heading">Apology</header>
+    <p class="standard">
+        {{ message }}
+    </p>
+    <p class="standard">
+        If you want to go back to the home page please click below:
+    </p>
+    <button type="submit"><a href="{{ url_for('index') }}">Home</a></button>
+{% endblock %}
+    <br>

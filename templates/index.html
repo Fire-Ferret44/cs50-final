@@ -1,0 +1,30 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    : Home
+{% endblock %}
+
+{% block main %}
+    <header class="heading">Welcome to the Call Roster Generator</header>
+    <p class="standard">
+        This is a webapp dedicated to roster shift calendars, timetables or similar problems that have multiple participants and constraints.
+        It allows you to create a roster for your team, taking into account various constraints and preferences.
+        The roster can be generated based on the input you provide, and you can download it in various formats.
+        <br><br>
+        It might not be initially obvious how to interact with the site so please go to the tutorial page first.
+        <br><br>
+        The site is built in a modular way and parameters can be adjusted, but the current "standard" model used as an example is for a working hours plus overtime call schedule and
+        is as follows:
+    </p>
+    <p class="list">
+        <b>Monday - Thursday:</b> 1x 16h00-20h00, 1x 16h00-10h00+<br>
+        <b>Friday:</b> 2x 16h00-08h00+<br>
+        <b>Saturday:</b> 2x 08h00-08h00+<br>
+        <b>Sunday:</b> 2x 08h00-10h00+<br>
+    </p>
+    <p class="standard">
+        If you have any questions or suggestions please use the <a href="/">contact</a> link above.
+        Good luck and enjoy!
+    </p>
+    <br>
+{% endblock %}

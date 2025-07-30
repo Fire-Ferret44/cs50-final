@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    : Create
+{% endblock %}
+
+{% block main %}
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul>
+      {% for message in messages %}
+        <li>{{ message }}</li>
+      {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+    <form class="standard" method="POST" action="{{ url_for('generate') }}"><br>
+        <header class="heading">Please click below to generate:</header>
+        <button type="submit">Generate</button>
+    </form>
+{% endblock %}
