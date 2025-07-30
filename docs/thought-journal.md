@@ -139,7 +139,7 @@ Satisfiability Modulo Theories (SMT)
 
 ## 19 June 2025
 
-Today some more theory around this problem and making a plan for a solution I want to try. Likely involving combination of approaches. Initial and thern for optimisation. 
+Today some more theory around this problem and making a plan for a solution I want to try. Likely involving combination of approaches. Initial and then for optimisation. 
 
 ### Heuristic Assignment
 - Most Constrained Variable First
@@ -289,4 +289,35 @@ Basic pipeline works with random schedule generator! For plan ahead:
 3) start on the actual scheduler with current data sets
 4) input options on flask
 5) SQL database, input interface for fixed shift settings
-6) Different shift models and scheduler for instance
+6) Different shift models and scheduler for different instances
+
+## 27-28 July 2025
+
+Simple html framework. So far for layout, index and create html files. Icon added for title. Basic navigation bar set up and styled with css. Entered form for csv files (required) in the create.html file.
+
+## 29 July 2025
+
+Goal for today is simple print to screen after intputting csv files. That will open up the space to move onto the scheduler logic. Also: think about renaming to a descriptive name.
+
+Creating function in main that the flask app can call. 
+Noticed: don't use shift_period value anywhere. Which is strange. Did I hard-code it somewhere? It's all under load_shift_calendar. Might have to consider changing so more modular? but currently working. Might be a problem the different helper functions for main call specific paths and not user input paths. 
+
+Created a new file for parsing csv files. Apparently files uploaded via web form are "file-like" objects and are read as bytes if passed into another function. They need to be encoded and wrapped to be read as text. Can use io.StringIO or io.TextIOWrapper. Using read moves the pointer along the file and stream seek 0 needs to be used to take back to beginning. 
+
+Reviewed a lot of basic things in python with debugging. E.g. syntax with loops, lists, dictionaries. Flash messages need a secret key (should not hardcode in real deployment).Will add to gitignore list
+
+## 30 July 2025
+
+Made session and updated functions to read uplaoded files in new directory and new filename taht includes session number.
+schedule_period value found. Used within the load_shift_calendar function. Updated together for new filename.
+
+A lot of debugging the different pages. Now there is a basic pipeline! Upload files, validate files, save files, run random scheduler, print schedule and metadata to screen.
+
+HTML Short-term:
+1. Print schedule in a calendar format
+2. Print metadata in table so it can be easily scanned. Or even in a csv layout. 
+
+(i.e. Change formatting in the utils so the printing is easier to read for both html and the testing main.py. Can aslo be saved as a csv file for accessing.)
+
+After the results can be read easily, the real scheduler theory and work can begin.
+(Don't forget to update the structure tree and the requirements.txt)
