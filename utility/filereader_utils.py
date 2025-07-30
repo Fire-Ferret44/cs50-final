@@ -24,3 +24,21 @@ def get_next_file_number(output_dir: Path) -> int:
                 max_number = max(max_number, number)
     
     return max_number + 1
+
+def get_next_upload_file_number(output_dir: Path) -> int:
+    """
+    Get the next upload file number based on existing upload files in the folder.
+    Args: output_dir (Path)
+    Returns: int
+    """
+    pattern = re.compile(r'doctors_(\d+)\.csv')
+    max_number = 0
+    
+    for file in output_dir.iterdir():
+        if file.is_file() and pattern.match(file.name):
+            match = pattern.search(file.name)
+            if match:
+                number = int(match.group(1))
+                max_number = max(max_number, number)
+    
+    return max_number + 1
