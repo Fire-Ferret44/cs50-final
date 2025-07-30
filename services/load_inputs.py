@@ -151,11 +151,11 @@ def load_doctors(
 
     return doctors
 
-def load_shift_structure(shift_structure_path: Path) -> ShiftStructure:
+def load_shift_structure(shift_structure_path: Path, filenumber:int) -> ShiftStructure:
     """Loads shift structure from csv"""
     shift_structure = ShiftStructure()
-
-    with open(shift_structure_path, newline='', encoding='utf-8') as file:
+    file_path = shift_structure_path / f'shift_structure_{filenumber}.csv'if filenumber else shift_structure_path / 'shift_structure.csv'
+    with open(file_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
             shift = Shift(
@@ -181,9 +181,11 @@ def load_public_holidays(public_holidays_path: Path) -> list[date]:
                 holidays.append(datetime.strptime(row[0].strip(), "%d-%m-%Y").date())
     return holidays
 
-def load_schedule_period(schedule_period_path: Path) -> tuple[date, date]:
+def load_schedule_period(schedule_period_path: Path, filenumber) -> tuple[date, date]:
     """Loads schedule period from csv"""
-    with open(schedule_period_path, newline='', encoding='utf-8') as file:
+    file_path = schedule_period_path / f'schedule_period_{filenumber}.csv' if filenumber else schedule_period_path / 'schedule_period.csv'
+    
+    with open(file_path, newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         next(reader, None)  # skip header
         line = next(file).strip()
@@ -200,16 +202,16 @@ def build_schedule_calendar(start_date, end_date, shift_structure, public_holida
     return calendar
 
 
-def load_shift_calendar(data_path: Path) -> ShiftCalendar:
+def load_shift_calendar(data_path: Path, filenumber: int) -> ShiftCalendar:
     """Builds a shift calendar i.e. number and type of shifts that need to be filled"""
-    with open(data_path / 'schedule_period.csv', newline='', encoding='utf-8') as f:
+    with open(data_path / f'schedule_period_{filenumber}.csv', newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         row = next(reader)
         start_date = datetime.strptime(row['start_date'], '%d-%m-%Y').date()
         end_date = datetime.strptime(row['end_date'], '%d-%m-%Y').date()
 
     shift_structure = ShiftStructure()
-    shift_structure.load_from_csv(data_path / 'shift_structure.csv')
+    shift_structure.load_from_csv(data_path / f'shift_structure_{filenumber}.csv') #change for app session number test
 
     public_holidays = []
     with open(data_path / 'public_holidays_2025.csv', newline='', encoding='utf-8') as f:
