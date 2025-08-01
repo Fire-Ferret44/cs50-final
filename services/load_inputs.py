@@ -154,7 +154,7 @@ def load_doctors(
 def load_shift_structure(shift_structure_path: Path, filenumber:int) -> ShiftStructure:
     """Loads shift structure from csv"""
     shift_structure = ShiftStructure()
-    file_path = shift_structure_path / f'shift_structure_{filenumber}.csv'if filenumber else shift_structure_path / 'shift_structure.csv'
+    file_path = shift_structure_path / f'shift_structure_{filenumber}.csv'if filenumber else shift_structure_path
     with open(file_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
         for row in reader:
@@ -172,8 +172,9 @@ def load_shift_structure(shift_structure_path: Path, filenumber:int) -> ShiftStr
 
 def load_public_holidays(public_holidays_path: Path) -> list[date]:
     """Loads public holidays form csv"""
+    file_path = public_holidays_path / 'public_holidays_2025.csv'
     holidays = []
-    with open(public_holidays_path, newline='', encoding='utf-8') as file:
+    with open(file_path, newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         next(reader, None) # skip header
         for row in reader:
@@ -204,14 +205,16 @@ def build_schedule_calendar(start_date, end_date, shift_structure, public_holida
 
 def load_shift_calendar(data_path: Path, filenumber: int) -> ShiftCalendar:
     """Builds a shift calendar i.e. number and type of shifts that need to be filled"""
-    with open(data_path / f'schedule_period_{filenumber}.csv', newline='', encoding='utf-8') as f:
+    file_path = data_path / f'schedule_period_{filenumber}.csv' if (filenumber > 0) else data_path / 'schedule_period.csv'
+    with open(file_path, newline='', encoding='utf-8') as f:
         reader = csv.DictReader(f)
         row = next(reader)
         start_date = datetime.strptime(row['start_date'], '%d-%m-%Y').date()
         end_date = datetime.strptime(row['end_date'], '%d-%m-%Y').date()
 
     shift_structure = ShiftStructure()
-    shift_structure.load_from_csv(data_path / f'shift_structure_{filenumber}.csv') #change for app session number test
+    structure_path = data_path / f'shift_structure_{filenumber}.csv' if (filenumber > 0) else data_path / 'shift_structure.csv'
+    shift_structure.load_from_csv(structure_path) #change for app session number test
 
     public_holidays = []
     with open(data_path / 'public_holidays_2025.csv', newline='', encoding='utf-8') as f:

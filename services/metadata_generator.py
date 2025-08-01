@@ -5,7 +5,7 @@ Loads data from csv files into the classes for doctors and shifts.
 from models.metadata import DoctorMetadata
 from utility.calendar_utils import DayType
 
-def generate_metadata(rostered_calendar, doctors, shift_structure) -> dict[str, DoctorMetadata]:
+def generate_metadata(rostered_calendar, doctors, shift_structure, public_holidays) -> dict[str, DoctorMetadata]:
     """
     Generates metadata for each doctor based on the rostered calendar.
     """
@@ -20,12 +20,14 @@ def generate_metadata(rostered_calendar, doctors, shift_structure) -> dict[str, 
             sat_shifts_worked=0,
             sun_shifts_worked=0,
             weekend_shifts_worked=0,
+            public_holidays_worked=0,
             total_hours_worked=0.0,
             preferences_granted=0.0
         )
 
     for day, info in rostered_calendar.calendar.items():
-        day_type_str = info['dow'].lower()
+        day_type_instance = DayType(public_holidays=public_holidays)
+        day_type_str = day_type_instance.get_day_type(day)
         # Get the metadata for the day type
         for shift_type, assigned in info["assigned"].items():
             for doctor_name in assigned:
@@ -41,6 +43,7 @@ def generate_metadata(rostered_calendar, doctors, shift_structure) -> dict[str, 
                 elif day_type_str == 'sunday':
                     metadata_info[doctor_name].sun_shifts_worked += 1
                 elif 'public_holiday' in day_type_str:
+                    metadata_info[doctor_name].public_holidays_worked += 1
                 # Optionally handle public holiday types. Yes to be worked on!
                     pass
 

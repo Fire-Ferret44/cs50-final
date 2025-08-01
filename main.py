@@ -10,7 +10,7 @@ from services.load_inputs import (
     load_doctors,
     load_shift_structure,
     # load_schedule_period,
-    # load_public_holidays,
+    load_public_holidays,
     load_shift_calendar,
 )
 from services.metadata_generator import generate_metadata
@@ -19,6 +19,7 @@ from utility.formatter_utils import format_roster_output, format_metadata_output
 
 def run_scheduler_from_paths(input_path: Path, filenumber: int):
     """Function that can be used in with the flask app to run scheduler."""
+    print("Running: run_scheduler_from_paths()")
     doctors = load_doctors(
         doctors_path=input_path / f"doctors_{filenumber}.csv",
         leave_path=input_path / f"leave_{filenumber}.csv",
@@ -29,7 +30,8 @@ def run_scheduler_from_paths(input_path: Path, filenumber: int):
     shift_structure = load_shift_structure(input_path, filenumber)
     shift_calendar = load_shift_calendar(input_path, filenumber) # schedule period read within this function
     rostered_calendar = run_random_scheduler(list(doctors.values()), shift_calendar)
-    metadata = generate_metadata(rostered_calendar, list(doctors.values()), shift_structure)
+    public_holidays = load_public_holidays(input_path)
+    metadata = generate_metadata(rostered_calendar, list(doctors.values()), shift_structure, public_holidays)
 
     schedule_text = format_roster_output(rostered_calendar)
     metadata_text = format_metadata_output(metadata)
@@ -44,6 +46,7 @@ def run_scheduler_from_paths(input_path: Path, filenumber: int):
 
 def main():
     """ Paths for input data """
+    print("Running: main()")
     base_path = Path("data/input") # Defines path to input data folder
 
     doctors = load_doctors(
@@ -55,7 +58,7 @@ def main():
 
     shift_structure = load_shift_structure(base_path / "shift_structure.csv", filenumber=0)
     # schedule_period = load_schedule_period(base_path / "schedule_period.csv")
-    # public_holidays = load_public_holidays(base_path / "public_holidays_2025.csv")
+    public_holidays = load_public_holidays(base_path / "public_holidays_2025.csv")
 
     print(f"Loaded {len(doctors)} doctors")
     # for name, doctor in doctors.items():
@@ -63,7 +66,7 @@ def main():
 
 
     data_path = Path("data/input")
-    shift_calendar = load_shift_calendar(data_path,filenumber=0)  # Load shift calendar with schedule period read within this function
+    shift_calendar = load_shift_calendar(data_path, filenumber=0)  # Load shift calendar with schedule period read within this function
 
     # Run the scheduling algorithm
     rostered_calendar = run_random_scheduler(list(doctors.values()), shift_calendar)
@@ -87,7 +90,7 @@ def main():
     # print(schedule_text)
 
     # Run the metadata generation
-    metadata = generate_metadata(rostered_calendar, list(doctors.values()), shift_structure)
+    metadata = generate_metadata(rostered_calendar, list(doctors.values()), shift_structure, public_holidays)
 
     # Create filename for metadata output
     metadata_filename = output_dir / f"test_{file_number}_metadata.txt"

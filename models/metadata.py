@@ -3,7 +3,7 @@
 class DoctorMetadata:
     """Metadata for a doctor."""
     def __init__(self, name: str, total_shifts_worked: int, weekday_shifts_worked: int, fri_shifts_worked: int,
-                 sat_shifts_worked: int, sun_shifts_worked: int, weekend_shifts_worked: int,
+                 sat_shifts_worked: int, sun_shifts_worked: int, weekend_shifts_worked: int, public_holidays_worked: int,
                  total_hours_worked: float, preferences_granted: float):
         self.name = name
         self.total_shifts_worked = total_shifts_worked
@@ -12,6 +12,7 @@ class DoctorMetadata:
         self.sat_shifts_worked = sat_shifts_worked
         self.sun_shifts_worked = sun_shifts_worked
         self.weekend_shifts_worked = weekend_shifts_worked
+        self.total_public_holidays_worked = public_holidays_worked
         self.total_hours_worked = total_hours_worked
         self.preferences_granted = preferences_granted
 
