@@ -109,9 +109,6 @@ def result():
     schedule_text = session['schedule_text']
     metadata_text = session['metadata_text']
     
-    print(f"SCHEDULE: {repr(schedule_text)}")
-    print(f"METADATA: {repr(metadata_text)}")
-    
     return render_template('result.html', schedule_text=schedule_text, metadata_text=metadata_text)
     # Display the schedule and metadata in a formatted way
 
