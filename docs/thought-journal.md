@@ -321,3 +321,13 @@ HTML Short-term:
 
 After the results can be read easily, the real scheduler theory and work can begin.
 (Don't forget to update the structure tree and the requirements.txt)
+
+Instead of appending the metadata list with "\n". Changed to ", ". More or less well-algined for now to work on the scheduler tomorrow! Noticed inconsistency with the sum of weekdays worked in metadata. Fix bug.
+
+A lot of other bugs creeped up now that I wanted to return back to working on main() after adding some arguments to functions etc. Now running well again. Formatted metadata also let's data be visualised easier. Both main() abd the functionf for flask run now. 
+
+Now dedicated proper roster work can begin.
+
+## 31 July 2025
+
+Break
