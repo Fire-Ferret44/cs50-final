@@ -328,6 +328,31 @@ A lot of other bugs creeped up now that I wanted to return back to working on ma
 
 Now dedicated proper roster work can begin.
 
-## 31 July 2025
+## 31 July - 3 August 2025
+
+Break and travel back to place of work
+
+## 4 - 6 August 2025
+
+Gather resources for learning algorithms and methods. Textbooks prove difficult to understand with examples put in maths/logic notation. Stuck at beginning with computational complexity and getting caught up in terminology and distinctions that will not make a difference in my understanding the project. Combination of above lead to roadblock.
+
+## 7 - 24 August 2025
+
+Break and focus on work/other activities
+
+## 25 - 29 August 2025
+
+Restarted looking at notes started when looking at studying theory. Got caught in a rabbit hole of dynamic programming and memoisation. Specifically looked at the rod cutting problem, bottom-up solutions, fibonacci sequence with recursion vs memoisation, representation in nodes (trees, heights, levels) and grouping problem into subsets, time complexity, grid traveller, knapsack 1/0. Difficulty understanding how these fundamentals will directly help with solving problem of constraint-satisfaction. 
+
+## 30 - 31 August 2025
 
 Break
+
+## 1 September 2025
+
+Happy Spring Day! 
+
+Today's focus is restarting and reframing. I have a focused list of concepts I want to go through in the next few days that include: terminology of CSPs and theory of different ways of solving this problem. I have found a video by the CS50 team ("Optimization - Lecture 3 - CS50's Introduction to Artificial Intelligence with Python 2020") that explains some of the topics. I think looking at these concepts and then breaking my problem in to small steps to grow on will be most beneficial. Not too much at once.
+
+To keep this thought journal and what I learned more clear I will make a seperate file for what I learned for scheduling problems called "algorithmarium". The actual tests can be in a different directory, but the csp theory I will keep in this doc. Initionally I will work on a word doc externally and then paste things into the doc as I get more comfortable formatting with markdown - currently a distraction.
+
