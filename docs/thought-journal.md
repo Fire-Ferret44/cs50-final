@@ -356,3 +356,24 @@ Today's focus is restarting and reframing. I have a focused list of concepts I w
 
 To keep this thought journal and what I learned more clear I will make a seperate file for what I learned for scheduling problems called "algorithmarium". The actual tests can be in a different directory, but the csp theory I will keep in this doc. Initionally I will work on a word doc externally and then paste things into the doc as I get more comfortable formatting with markdown - currently a distraction.
 
+Make a small problem to try solve (10 days, 5 doctors). Initial 1 shift per day and then 2 shifts per day for 6 doctors. Too complicated with other csvs. Just create lists within the basic_model_1.py file.
+
+## 2 September 2025
+
+Looked at other lectures as well. Including some youtube videos (see CSP doc). Completed basic model 1 and made plan for what to include in basic model 2.
+
+## 3 - 7 September 2025
+
+Break
+
+## 8 September 2025
+
+Complete basic model 2. A lot of concepts reviewed and applied. (Outlined in CSP doc). Making connections between theory and practice. 
+
+## 9 - 14 September 2025
+
+Break
+
+## 15 September 2025
+
+Reviewed and refined made basic model 2. Smoothed out some features. Reviewed the whole file on chat and prompted for suggestions. Suggestions noted for intermediate model 1. Now time to bring in classes and utilites already worked on in general project to include days of the week in the intermediate model.
