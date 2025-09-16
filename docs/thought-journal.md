@@ -377,3 +377,23 @@ Break
 ## 15 September 2025
 
 Reviewed and refined made basic model 2. Smoothed out some features. Reviewed the whole file on chat and prompted for suggestions. Suggestions noted for intermediate model 1. Now time to bring in classes and utilites already worked on in general project to include days of the week in the intermediate model.
+
+## 16 September 2025
+
+Started with changing the variables and unary and binary constraints. It looks very nice. 
+
+Started trying to fold in the classes and utilities like fluffy egg whites in batter.
+More difficult than anticipated:
+1. Paths to get to folder in the parent folder if run form inside the tests/algorithmarium folder.
+2. the shift structure class does not have unique id or even dates in the structure. Perhaps something that needs to be changed for the whole project, but definitely something that needs to be addressed now otherwise it cannot be connected to algorithm and shift domain pairs. Can add the type of shift in the id. If there are 2x identical shifts in the weekend shifts slots can be assigned to differentiate the two shifts.
+Shift_id = DDMMYY_<dow>_<shift_type>_<slot>
+Add a date attribute to Shift class, with None passed in in def
+Actual dates added in a loop in build_calendar function. 
+Add shift_id to shift class also with None passed in in def. 
+Actual shift_id made inside build_calendar function with schema above.
+
+Because the shifts are different lengths through the week, it might be more difficult to look at unordered pairs. Now options to abandon all pairs and look at single shifts as single variables. Or look at the weekday shifts as single variables and the weekend shifts as pairs that can have binary constraints already shrink the domain from the get go.
+
+What would be computationally easier and what would be more scalable? What if suddenly there are 3 slots? Do some things automatically move the consistency checking?
+
+I want to keep the unary and binary constraints I had put in this model and add to basic model 2 because it looks nice and neat and may be useful in the future. Instead of deleting.
