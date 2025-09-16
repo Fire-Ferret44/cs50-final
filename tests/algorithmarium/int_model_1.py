@@ -23,15 +23,65 @@ Main aim of this model: bring in hours, long and short shifts and days of the we
 
 from itertools import combinations
 import random
+from datetime import datetime
+from pathlib import Path
+from services.load_inputs import (
+    load_shift_structure,
+    load_shift_calendar,
+)
 
+"""1. get doctors"""
 doctors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
-shifts = [] #populate with the classes and shift period functions I have already created
 
-#Unary constraints:
+"""2. get shift slots ("nodes")"""
+#TO DO: Import shift class and shift calendar structures from "utility" and "models"
+base_path = Path("data/input")
+shift_structure = load_shift_structure(base_path / "shift_structure.csv", filenumber=0) #copied from main and load_inputs
+shift_calendar = load_shift_calendar(base_path, filenumber=0) #copied from main and load_inputs
+#TO DO: Get shift period into model and see what shifts required etc
+
+"""3. get doctor pairs for shift slots ("domain")"""
+all_pairs = list(combinations(doctors, 2))
+#TO DO: but! list for Mon to Thur must be unordered pairs, Fri to Sun unordered
+
+"""4. shrink domains with constraints"""
+#4.1Unary constraints:
 leave = {
     'A': ['4', '5', '6', '7', '8'],
     'E': ['11', '12', '13', '14', '15'],
     'H': ['11', '12'],
     'C': ['15', '16', '17', '18', '19', '20', '21']
 }
+
+def filter_unary_constraints(shift, pairs):
+    """Filters pairs based on their availability E.g. leave"""
+    valid_pairs = []
+    for doc1, doc2 in pairs:
+        if shift not in leave.get(doc1, []) and shift not in leave.get(doc2, []):
+            valid_pairs.append((doc1, doc2))
+    return valid_pairs
+
+def filter_binary_constraints(pairs):
+    #4.2 Binary constraints:
+    """Filters pairs based on compatibility E.g. who can/can't work with who"""
+    valid_pairs = []
+    for doc1, doc2 in pairs:
+        # D and E cannot work together
+        if (doc1, doc2) in [('D', 'E'), ('E', 'D')]:
+            continue
+        # G must work with A, B or D
+        if doc1 == 'G' and doc2 not in ['A', 'B', 'D']:
+            continue
+        if doc2 == 'G' and doc1 not in ['A', 'B', 'D']:
+            continue
+        valid_pairs.append((doc1, doc2))
+    return valid_pairs
+
+def get_valid_pairs(shift, all_pairs):
+    """Apply unary then binary constraints in order."""
+    unary_filtered_pairs = filter_unary_constraints(shift, all_pairs)
+    binary_filtered_pairs = filter_binary_constraints(unary_filtered_pairs)
+    return binary_filtered_pairs
+
+#Initialise dictionary of shift slots with filtered domain
 
