@@ -24,7 +24,11 @@ Main aim of this model: bring in hours, long and short shifts and days of the we
 from itertools import combinations
 import random
 from datetime import datetime
+import sys
 from pathlib import Path
+# Add project root to Python path
+project_root = Path(__file__).parent.parent.parent
+sys.path.insert(0, str(project_root))
 from services.load_inputs import (
     load_shift_structure,
     load_shift_calendar,
@@ -35,7 +39,8 @@ doctors = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H']
 
 """2. get shift slots ("nodes")"""
 #TO DO: Import shift class and shift calendar structures from "utility" and "models"
-base_path = Path("data/input")
+#base_path = Path("data/input")
+base_path = project_root / "data" / "input"
 shift_structure = load_shift_structure(base_path / "shift_structure.csv", filenumber=0) #copied from main and load_inputs
 shift_calendar = load_shift_calendar(base_path, filenumber=0) #copied from main and load_inputs
 #TO DO: Get shift period into model and see what shifts required etc
@@ -83,5 +88,8 @@ def get_valid_pairs(shift, all_pairs):
     binary_filtered_pairs = filter_binary_constraints(unary_filtered_pairs)
     return binary_filtered_pairs
 
-#Initialise dictionary of shift slots with filtered domain
+shift_pairs = {}
+for shift in shift_pairs:
+    shift_pairs[shift] = get_valid_pairs(shift, all_pairs)
 
+print(shift_pairs)

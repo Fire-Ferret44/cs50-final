@@ -17,25 +17,26 @@ import random
 doctors = ['A', 'B', 'C', 'D', 'E', 'F', 'G']
 shifts = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10']
 
+#all pair combinations for doctors
+all_pairs = list(combinations(doctors, 2))
+
 #Unary constraints:
 leave = {
     'A': ['4', '5', '6'],
     'E': ['7', '8', '9', '10']
 }
 
-def unary_constraint(shift, doctor):
-    """Return True if doctor can work this shift."""
-    return shift not in leave.get(doctor, [])
+def filter_unary_constraints(shift, pairs):
+    """Filters pairs based on their availability E.g. leave"""
+    valid_pairs = []
+    for doc1, doc2 in pairs:
+        if shift not in leave.get(doc1, []) and shift not in leave.get(doc2, []):
+            valid_pairs.append((doc1, doc2))
+    return valid_pairs
 
-def get_valid_pairs(shift, doctors):
-    """Return possible pairs that can work together on a given shift"""
-    # doctors not on leave
-    available_doctors = [doc for doc in doctors if unary_constraint(shift, doc)]
-    
-    # generate unordered pairs after unary constraints
-    pairs = combinations(available_doctors, 2)
-
-    # create list of valid pairs after binary constraints
+#Binary constraints:
+def filter_binary_constraints(pairs):
+    """Filters pairs based on compatibility E.g. who can/can't work with who"""
     valid_pairs = []
     for doc1, doc2 in pairs:
         # D and E cannot work together
@@ -49,10 +50,16 @@ def get_valid_pairs(shift, doctors):
         valid_pairs.append((doc1, doc2))
     return valid_pairs
 
+def get_valid_pairs(shift, all_pairs):
+    """Apply unary then binary constraints in order."""
+    unary_filtered_pairs = filter_unary_constraints(shift, all_pairs)
+    binary_filtered_pairs = filter_binary_constraints(unary_filtered_pairs)
+    return binary_filtered_pairs
+
 """Create dictionary of shift: valid doctor pairs"""
 shift_pairs = {}
 for shift in shifts:
-    shift_pairs[shift] = get_valid_pairs(shift, doctors)
+    shift_pairs[shift] = get_valid_pairs(shift, all_pairs)
 
 #for shift, pairs in shift_pairs.items(): #number of pairs per shift out of interest
 #    print(f"Shift {shift}: {len(pairs)} valid pairs")
