@@ -397,3 +397,27 @@ Because the shifts are different lengths through the week, it might be more diff
 What would be computationally easier and what would be more scalable? What if suddenly there are 3 slots? Do some things automatically move the consistency checking?
 
 I want to keep the unary and binary constraints I had put in this model and add to basic model 2 because it looks nice and neat and may be useful in the future. Instead of deleting.
+
+## 17 - 19 September 2025
+
+Break for course
+
+## 20 September 2025
+
+Update basic model 2 with the ordered unary and binary constraints
+
+## 21 September 2025
+
+Updated terminal commands with .bashrc (changing pythn3 to python)
+
+## 22 September 2025
+
+Long break to focus on clinical learning and shifts and shadowing. Needed some help accessing different files in the directory from sub-folders.
+
+## 6 November 2025
+
+Returned to finish project. Definitely will take time to think through concepts again and understand what I have done so far. A bit frustrating to have lapsed so much time. For now it will be important to just finish an MVP that I can hand in and if I wanted to I could work on another project to have live on a webpage somewhere if I want to carry on with the project. 
+
+Today the focus is on reviewing the manual algorithm steps in the basic and intermediate models then to move on to practical implication.
+
+
