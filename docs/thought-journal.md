@@ -420,4 +420,28 @@ Returned to finish project. Definitely will take time to think through concepts 
 
 Today the focus is on reviewing the manual algorithm steps in the basic and intermediate models then to move on to practical implication.
 
+## 13 November 2025
 
+Made thoughts on how to implement int_model_1 (in algorithmarium doc)
+--> first make each shift a variable and each has its own domain of doctors
+
+Errors fixed:
+-shift structure csv changed from friday long and short to 2x friday long calls
+-shift_id name changed from ddmmyy to yymmdd
+-shift_id name change for slots from counting the same shift_types to using the number in required_staff
+-inside the Shift class for dated shifts, the number required will =1 for every shift as each oen is now separated
+
+int_model set to check each shift prints correctly for a given range and does. 
+
+Used a lot of time to change how the shift_ids are made and how public holidays will work in the different classes and functions.
+
+Changed: DayType Class in calendar_utils
+
+## 14 November 2025
+
+Shift work
+
+## 15 November 2025
+
+Fixed calendar_utils, shift_calendar
+Updated: 
