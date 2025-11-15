@@ -13,8 +13,9 @@ class DayType:
     """Class to determine the type of day based on public holidays and weekdays."""
     def __init__(self, public_holidays: list[date]):
         self.public_holidays = set(public_holidays)
+        self.day_type = {}
 
-    def get_day_type(self, dt: date) -> str:
+    def get_day_type(self, dt: date) -> dict:
         """
         Determines what kind of day this is based on:
         - Calendar weekday
@@ -23,33 +24,63 @@ class DayType:
         """
 
         weekday = dt.weekday()  # Monday = 0, Sunday = 6
+        dow_name = dt.strftime("%A")
 
+        # Check public holiday status
         is_today_ph = dt in self.public_holidays
-        is_yesterday_ph = dt - timedelta(days=1) in self.public_holidays
-        is_tomorrow_ph = dt + timedelta(days=1) in self.public_holidays
+        is_yesterday_ph = (dt - timedelta(days=1)) in self.public_holidays
+        is_tomorrow_ph = (dt + timedelta(days=1)) in self.public_holidays
 
+        day_description = None
+        day_type = None
+
+        # Today is public holiday
         if is_today_ph:
+            day_type = 'public_holiday'
+            
+            #described like what day it behaves like:
             if weekday <= 3:  # Monday to Thursday
-                return 'public_holiday_behaves_like_sunday'
+                day_description = 'public_holiday_behaves_like_sunday'
             elif weekday == 4:
-                return 'public_holiday_behaves_like_saturday'
+                day_description = 'public_holiday_behaves_like_saturday'
             elif weekday == 5:
-                return 'public_holiday_saturday'
-            elif weekday == 6:
-                return 'public_holiday_sunday'
+                day_description = 'public_holiday_saturday'
+            else:
+                day_description = 'public_holiday_sunday'
 
+        # Tomorrow is public holiday
         elif is_tomorrow_ph:
             if weekday <= 3:  # Monday to Thursday
-                return 'pre_holiday_behaves_like_friday'
+                day_type = 'friday'
+                day_description = 'pre_holiday_behaves_like_friday'
             elif weekday == 6:
-                return 'pre_holiday_behaves_like_saturday'
+                day_type = 'saturday'
+                day_description = 'pre_holiday_behaves_like_saturday'
 
+        # Yesterday was public holiday
         elif is_yesterday_ph:
             if weekday == 5:
-                return 'post_holiday_saturday'
+                day_type = 'saturday'
+                day_description = 'post_holiday_saturday'
+        
+        #Regular days
+        else:
+            day_type = self.weekday_to_type(weekday)
 
-        # Regular days
-        if 0 <= weekday <= 3:  # Monday to Thursday
+        result = {
+            "dow": dow_name,
+            "day_type": day_type,
+            "description": day_description
+        }
+
+        self.day_type[dt] = result
+
+        return result
+
+    #day of week integer to type
+    def weekday_to_type(self, weekday: int) -> str:
+        """ Converts weekday integer to string type """
+        if 0 <= weekday <= 3:
             return 'weekday'
         elif weekday == 4:
             return 'friday'

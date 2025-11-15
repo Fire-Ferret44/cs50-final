@@ -28,43 +28,42 @@ class ShiftCalendar:
     def build_calendar(self) -> None:
         """Builds the calendar for the given date range"""
         current = self.start_date
+
         while current <= self.end_date:
-            day_type = self.day_type.get_day_type(current)
-            dow = current.strftime("%A").lower()
-            date_string = current.strftime("%d%m%y")
+            day_info = self.day_type.get_day_type(current)
+
+            date_string = current.strftime("%y%m%d")
             shifts: List[Shift] = self.shift_structure.get_shifts_for_day(current)
 
             #Add actual dates
             dated_shifts = []
-            type_count = {} #if there are 2 identical shifts we should numerate them to differentiate
-
+        
             for shift in shifts:
-                type_count[shift.shift_type] = type_count.get(shift.shift_type, 0) + 1
-                slot = type_count[shift.shift_type]
+                #add slot number to id if > 1
+                for slot in range(1, shift.required_staff + 1):
+                    if shift.required_staff > 1:
+                        shift_id = f"{date_string}_{day_info['dow'].lower()}_{shift.shift_type}_{slot}"
+                    else:
+                        shift_id = f"{date_string}_{day_info['dow'].lower()}_{shift.shift_type}"
 
-                #add slot number to id if >1
-                if slot > 1: 
-                    shift_id = f"{date_string}_{dow}_{shift.shift_type}_{slot}"
-                else:
-                    shift_id = f"{date_string}_{dow}_{shift.shift_type}"
-
-                dated_shift = Shift(
-                    day=shift.day,
-                    shift_type=shift.shift_type,
-                    start_time=shift.start_time,
-                    end_time=shift.end_time,
-                    hours=shift.hours,
-                    required_staff=shift.required_staff,
-                    date=current, # Assign the current date to the shift
-                    shift_id=shift_id  # Assign the unique shift ID
-                )
-                dated_shifts.append(dated_shift)
+                    dated_shift = Shift(
+                        day=shift.day,
+                        shift_type=shift.shift_type,
+                        start_time=shift.start_time,
+                        end_time=shift.end_time,
+                        hours=shift.hours,
+                        required_staff=1, # Each dated shift represents one staff slot
+                        date=current, # Assign the current date to the shift
+                        shift_id=shift_id  # Assign the unique shift ID
+                    )
+                    dated_shifts.append(dated_shift)
 
             shifts = dated_shifts # Replace with dated shifts
 
             self.calendar[current] = {
-                "day_type": day_type,
-                "dow" : dow,
+                "dow": day_info['dow'],
+                "day_type": day_info['day_type'],
+                "description": day_info['description'],
                 "shifts": shifts,
                 "assigned": {shift.shift_type: [] for shift in shifts}  # Initially empty
             }
