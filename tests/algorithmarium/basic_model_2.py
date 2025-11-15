@@ -156,7 +156,7 @@ def select_unassigned_variable(assignment, shift_pairs):
     return random.choice(possible_vars) if possible_vars else None
 
 #add a max_shift so the distribution is more even
-max_shifts = round(len(shifts) // len(doctors)) + 2
+max_shifts = round(len(shifts) // len(doctors)) + 2 #'2' is abertrary
 
 def consistent(pair, doc_count, assignment, var):
     """Check if the assignment is consistent with the constraints."""
