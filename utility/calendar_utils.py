@@ -24,12 +24,12 @@ class DayType:
         """
 
         weekday = dt.weekday()  # Monday = 0, Sunday = 6
-        dow_name = dt.strftime("%A")
+        dow_name = dt.strftime("%A").lower()
 
         # Check public holiday status
         is_today_ph = dt in self.public_holidays
-        is_yesterday_ph = (dt - timedelta(days=1)) in self.public_holidays
-        is_tomorrow_ph = (dt + timedelta(days=1)) in self.public_holidays
+        is_yesterday_ph = dt - timedelta(days=1) in self.public_holidays
+        is_tomorrow_ph = dt + timedelta(days=1) in self.public_holidays
 
         day_description = None
         day_type = None
@@ -37,7 +37,7 @@ class DayType:
         # Today is public holiday
         if is_today_ph:
             day_type = 'public_holiday'
-            
+
             #described like what day it behaves like:
             if weekday <= 3:  # Monday to Thursday
                 day_description = 'public_holiday_behaves_like_sunday'
@@ -62,20 +62,16 @@ class DayType:
             if weekday == 5:
                 day_type = 'saturday'
                 day_description = 'post_holiday_saturday'
-        
+
         #Regular days
-        else:
+        if day_type is None:
             day_type = self.weekday_to_type(weekday)
 
-        result = {
+        return{
             "dow": dow_name,
             "day_type": day_type,
             "description": day_description
         }
-
-        self.day_type[dt] = result
-
-        return result
 
     #day of week integer to type
     def weekday_to_type(self, weekday: int) -> str:
