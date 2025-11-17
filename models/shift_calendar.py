@@ -37,14 +37,10 @@ class ShiftCalendar:
 
             #Add actual dates
             dated_shifts = []
-        
             for shift in shifts:
-                #add slot number to id if > 1
-                for slot in range(1, shift.required_staff + 1):
-                    if shift.required_staff > 1:
-                        shift_id = f"{date_string}_{day_info['dow'].lower()}_{shift.shift_type}_{slot}"
-                    else:
-                        shift_id = f"{date_string}_{day_info['dow'].lower()}_{shift.shift_type}"
+                #add slot number to id
+                for slot_number in range(1, shift.base_required_staff + 1):
+                    shift_id = f"{date_string}_{day_info['dow'].lower()}_{shift.shift_type}_{slot_number}"
 
                     dated_shift = Shift(
                         day=shift.day,
@@ -52,7 +48,9 @@ class ShiftCalendar:
                         start_time=shift.start_time,
                         end_time=shift.end_time,
                         hours=shift.hours,
+                        base_required_staff=shift.base_required_staff,
                         required_staff=1, # Each dated shift represents one staff slot
+                        slot_number=slot_number,
                         date=current, # Assign the current date to the shift
                         shift_id=shift_id  # Assign the unique shift ID
                     )
@@ -65,7 +63,7 @@ class ShiftCalendar:
                 "day_type": day_info['day_type'],
                 "description": day_info['description'],
                 "shifts": shifts,
-                "assigned": {shift.shift_type: [] for shift in shifts}  # Initially empty
+                "assigned": {shift.shift_id: [] for shift in dated_shifts}  # Initially empty
             }
 
             current += timedelta(days=1)

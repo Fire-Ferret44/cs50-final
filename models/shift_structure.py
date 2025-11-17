@@ -5,16 +5,17 @@ Defines a ShiftStructure class that manages shifts for different days.
 from pathlib import Path
 import csv
 from collections import defaultdict
-from typing import List
+from typing import List, Dict
 
 from models.shift import Shift
 
 
 class ShiftStructure:
     """Class to manage shifts for different days of the week."""
+
     def __init__(self):
         # Dictionary: day_type (str) -> list of Shift objects
-        self.shifts_by_day = defaultdict(list)
+        self.shifts_by_day: Dict[str, List[Shift]] = defaultdict(list)
 
     def load_from_csv(self, filepath: Path):
         """Loads shift attritubutes"""
@@ -26,9 +27,17 @@ class ShiftStructure:
                 start_time = row['start_time']
                 end_time = row['end_time']
                 hours = row['hours']
-                required_staff = row['required_staff']
+                base_required_staff = int(row['required_staff'])
 
-                shift = Shift(day, shift_type, start_time, end_time, hours, required_staff)
+                shift = Shift(
+                    day=day,
+                    shift_type=shift_type,
+                    start_time=start_time,
+                    end_time=end_time,
+                    hours=hours,
+                    base_required_staff=base_required_staff,
+                    required_staff=0  # Placeholder, will be set in calendar
+                    )
                 self.shifts_by_day[day].append(shift)
 
     def add_shift(self, shift: Shift):
@@ -39,7 +48,7 @@ class ShiftStructure:
         """Return the list of shifts for the given day_type string."""
         dow = dt.strftime('%A').lower()
         return self.shifts_by_day.get(dow.lower(), [])
-    
+
     def get_shift_duration(self, shift_type: str) -> float:
         """Returns the duration of a shift by its type."""
         for shifts in self.shifts_by_day.values():
