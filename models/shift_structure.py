@@ -13,6 +13,15 @@ from models.shift import Shift
 class ShiftStructure:
     """Class to manage shifts for different days of the week."""
 
+    DAY_BEHAVIOUR_TO_TEMPLATE_DAY = {
+        "weekday": "monday",
+        "friday": "friday",
+        "saturday": "saturday",
+        "sunday": "sunday",
+        "public_holiday_behaves_like_saturday": "saturday",
+        "public_holiday_behaves_like_sunday": "sunday",
+    }
+
     def __init__(self):
         # Dictionary: day_type (str) -> list of Shift objects
         self.shifts_by_day: Dict[str, List[Shift]] = defaultdict(list)

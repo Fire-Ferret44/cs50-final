@@ -30,10 +30,19 @@ class ShiftCalendar:
         current = self.start_date
 
         while current <= self.end_date:
+            #Get infor on day behaviour
             day_info = self.day_type.get_day_type(current)
+            behaviour = day_info["day_type"]
+
+            #Map behaviour to template day
+            template_day = ShiftStructure.DAY_BEHAVIOUR_TO_TEMPLATE_DAY.get(behaviour)
+            if template_day is None:
+                template_day = current.strftime('%A').lower()
+
+            #Get shifts for that template day
+            shifts: List[Shift] = self.shift_structure.get_shifts_for_day(template_day, [])
 
             date_string = current.strftime("%y%m%d")
-            shifts: List[Shift] = self.shift_structure.get_shifts_for_day(current)
 
             #Add actual dates
             dated_shifts = []
