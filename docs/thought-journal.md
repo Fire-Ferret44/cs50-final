@@ -441,7 +441,13 @@ Changed: DayType Class in calendar_utils
 
 Shift work
 
-## 15 November 2025
+## 15 - 17 November 2025
 
 Fixed calendar_utils, shift_calendar
-Updated: 
+Updated: Shift class and ShiftCalendar class so it works better with reauired_staff and slots in shifts for each day. --> Can use the shift_id in combination with slots for binary checking of people working at the same time.
+Updated: Calendar Utilities and added handling a case where there are multiple public holidays consecutively. 
+
+
+## 24 November 2025
+
+Handling cases for consecutive public holidays. Added how the day of week from the csv input maps to day_type behaviour as well as how public holidays would behave (i.e Saturday or Sunday). Updated ShiftStructure, ShiftCalendar classes to handle new variable names. 
