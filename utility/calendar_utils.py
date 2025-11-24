@@ -15,27 +15,58 @@ class DayType:
         self.public_holidays = set(public_holidays)
         self.day_type = {}
 
+    def find_holiday_block(self, dt: date) -> tuple[date | None, date | None]:
+        """Determine if there are consecutive public holidays"""
+
+        if dt not in self.public_holidays:
+            return None, None
+
+        start = dt
+        end = dt
+
+        # Move backwards to find the start of the block
+        while start - timedelta(days=1) in self.public_holidays:
+            start -= timedelta(days=1)
+
+        # Move forwards to find the end of the block
+        while end + timedelta(days=1) in self.public_holidays:
+            end += timedelta(days=1)
+
+        return start, end
+
     def get_day_type(self, dt: date) -> dict:
         """
         Determines what kind of day this is based on:
         - Calendar weekday
         - Public holidays
+        - Checks if there are consecutive public holidays
         - Surrounding context (day before or after public holidays)
         """
 
         weekday = dt.weekday()  # Monday = 0, Sunday = 6
         dow_name = dt.strftime("%A").lower()
 
-        # Check public holiday status
-        is_today_ph = dt in self.public_holidays
-        is_yesterday_ph = dt - timedelta(days=1) in self.public_holidays
-        is_tomorrow_ph = dt + timedelta(days=1) in self.public_holidays
+        # Determine if today is a public holiday
+        in_holiday = dt in self.public_holidays
+
+        # Find block if today is a public holiday
+        if in_holiday:
+            holiday_start, holiday_end = self.find_holiday_block(dt)
+        else:
+            holiday_start = holiday_end = None
+
+        # Determine boundaries of holiday block
+        day_before_holiday = holiday_start - timedelta(days=1) if holiday_start else None
+        day_after_holiday = holiday_end + timedelta(days=1) if holiday_end else None
+
+        is_day_before_holiday = day_before_holiday == dt
+        is_day_after_holiday = day_after_holiday == dt
 
         day_description = None
         day_type = None
 
         # Today is public holiday
-        if is_today_ph:
+        if in_holiday:
             day_type = 'public_holiday'
 
             #described like what day it behaves like:
@@ -48,8 +79,8 @@ class DayType:
             else:
                 day_description = 'public_holiday_sunday'
 
-        # Tomorrow is public holiday
-        elif is_tomorrow_ph:
+        # Day before public holiday(s)
+        elif is_day_before_holiday:
             if weekday <= 3:  # Monday to Thursday
                 day_type = 'friday'
                 day_description = 'pre_holiday_behaves_like_friday'
@@ -57,8 +88,8 @@ class DayType:
                 day_type = 'saturday'
                 day_description = 'pre_holiday_behaves_like_saturday'
 
-        # Yesterday was public holiday
-        elif is_yesterday_ph:
+        # Day after public holiday(s)
+        elif is_day_after_holiday:
             if weekday == 5:
                 day_type = 'saturday'
                 day_description = 'post_holiday_saturday'
