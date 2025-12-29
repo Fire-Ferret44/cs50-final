@@ -164,7 +164,8 @@ def load_shift_structure(shift_structure_path: Path, filenumber:int) -> ShiftStr
                 start_time=row["start_time"],
                 end_time=row["end_time"],
                 hours=int(row["hours"]),
-                required_staff=int(row["required_staff"])
+                base_required_staff=int(row["required_staff"]),
+                required_staff=0
             )
             shift_structure.add_shift(shift)
 

@@ -40,18 +40,21 @@ class ShiftCalendar:
                 template_day = current.strftime('%A').lower()
 
             #Get shifts for that template day
-            shifts: List[Shift] = self.shift_structure.get_shifts_for_day(template_day, [])
+            shifts_for_day = self.shift_structure.shifts_by_day.get(template_day, [])
 
             date_string = current.strftime("%y%m%d")
 
             #Add actual dates
             dated_shifts = []
-            for shift in shifts:
+            for shift in shifts_for_day:
                 #add slot number to id
                 for slot_number in range(1, shift.base_required_staff + 1):
-                    shift_id = f"{date_string}_{day_info['dow'].lower()}_{shift.shift_type}_{slot_number}"
+                    shift_id = (
+                        f"{date_string}_{day_info['dow'].lower()}_"
+                        f"{shift.shift_type}_{slot_number}"
+                    )
 
-                    dated_shift = Shift(
+                    new_shift = Shift(
                         day=shift.day,
                         shift_type=shift.shift_type,
                         start_time=shift.start_time,
@@ -63,15 +66,13 @@ class ShiftCalendar:
                         date=current, # Assign the current date to the shift
                         shift_id=shift_id  # Assign the unique shift ID
                     )
-                    dated_shifts.append(dated_shift)
-
-            shifts = dated_shifts # Replace with dated shifts
+                    dated_shifts.append(new_shift)
 
             self.calendar[current] = {
                 "dow": day_info['dow'],
                 "day_type": day_info['day_type'],
                 "description": day_info['description'],
-                "shifts": shifts,
+                "shifts": dated_shifts,
                 "assigned": {shift.shift_id: [] for shift in dated_shifts}  # Initially empty
             }
 

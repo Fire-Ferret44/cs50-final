@@ -46,37 +46,49 @@ class DayType:
         weekday = dt.weekday()  # Monday = 0, Sunday = 6
         dow_name = dt.strftime("%A").lower()
 
-        # Determine if today is a public holiday
-        in_holiday = dt in self.public_holidays
+        # Check around status around date
+        today_holiday = self.find_holiday_block(dt)
+        tomorrow_holiday = self.find_holiday_block(dt + timedelta(days=1))
+        yesterday_holiday = self.find_holiday_block(dt - timedelta(days=1))
 
-        # Find block if today is a public holiday
-        if in_holiday:
-            holiday_start, holiday_end = self.find_holiday_block(dt)
-        else:
-            holiday_start = holiday_end = None
+        # Check if public holiday
+        holiday_start, holiday_end = today_holiday
+        in_holiday = (
+            holiday_start is not None and
+            holiday_end is not None
+            and holiday_start <= dt <= holiday_end
+        )
 
-        # Determine boundaries of holiday block
-        day_before_holiday = holiday_start - timedelta(days=1) if holiday_start else None
-        day_after_holiday = holiday_end + timedelta(days=1) if holiday_end else None
+        # Check if day before is holiday
+        is_day_before_holiday = (
+            tomorrow_holiday[0] is not None and
+            (dt == tomorrow_holiday[0] - timedelta(days=1))
+        )
 
-        is_day_before_holiday = day_before_holiday == dt
-        is_day_after_holiday = day_after_holiday == dt
+        # Check if day after is holiday
+        is_day_after_holiday = (
+            yesterday_holiday[1] is not None and
+            (dt == yesterday_holiday[1] + timedelta(days=1))
+        )
 
         day_description = None
         day_type = None
 
         # Today is public holiday
         if in_holiday:
-            day_type = 'public_holiday'
 
             #described like what day it behaves like:
             if weekday <= 3:  # Monday to Thursday
+                day_type = 'sunday'
                 day_description = 'public_holiday_behaves_like_sunday'
             elif weekday == 4:
+                day_type = 'saturday'
                 day_description = 'public_holiday_behaves_like_saturday'
             elif weekday == 5:
+                day_type = 'saturday'
                 day_description = 'public_holiday_saturday'
             else:
+                day_type = 'sunday'
                 day_description = 'public_holiday_sunday'
 
         # Day before public holiday(s)
