@@ -4,7 +4,7 @@ Generates a calendar of shifts for a range of days.
 """
 
 from datetime import date, timedelta
-from typing import Dict, List
+from typing import Dict
 
 from utility.calendar_utils import DayType
 from models.shift_structure import ShiftStructure
@@ -64,7 +64,8 @@ class ShiftCalendar:
                         required_staff=1, # Each dated shift represents one staff slot
                         slot_number=slot_number,
                         date=current, # Assign the current date to the shift
-                        shift_id=shift_id  # Assign the unique shift ID
+                        shift_id=shift_id, # Assign the unique shift ID
+                        overlap=shift.overlap, # Carry over overlap attribute
                     )
                     dated_shifts.append(new_shift)
 

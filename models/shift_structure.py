@@ -2,8 +2,6 @@
 Defines a ShiftStructure class that manages shifts for different days.
 """
 
-from pathlib import Path
-import csv
 from collections import defaultdict
 from typing import List, Dict
 
@@ -26,28 +24,8 @@ class ShiftStructure:
         # Dictionary: day_type (str) -> list of Shift objects
         self.shifts_by_day: Dict[str, List[Shift]] = defaultdict(list)
 
-    def load_from_csv(self, filepath: Path):
-        """Loads shift attritubutes"""
-        with open(filepath, newline='', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            for row in reader:
-                day = row['day'].lower()  # e.g. "monday"
-                shift_type = row['shift_type']
-                start_time = row['start_time']
-                end_time = row['end_time']
-                hours = row['hours']
-                base_required_staff = int(row['required_staff'])
-
-                shift = Shift(
-                    day=day,
-                    shift_type=shift_type,
-                    start_time=start_time,
-                    end_time=end_time,
-                    hours=hours,
-                    base_required_staff=base_required_staff,
-                    required_staff=0  # Placeholder, will be set in calendar
-                    )
-                self.shifts_by_day[day].append(shift)
+    #def load_from_csv(self, filepath: Path):
+    #No longer needed --- IGNORE ---
 
     def add_shift(self, shift: Shift):
         """ Adds a shift """

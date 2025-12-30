@@ -157,15 +157,25 @@ def load_shift_structure(shift_structure_path: Path, filenumber:int) -> ShiftStr
     file_path = shift_structure_path / f'shift_structure_{filenumber}.csv'if filenumber else shift_structure_path
     with open(file_path, newline='', encoding='utf-8') as file:
         reader = csv.DictReader(file)
+
         for row in reader:
+            day = row["day"].strip().lower()
+
+            overlap_str = row["overlap"].strip().lower()
+            if overlap_str not in ("yes","no"):
+                raise ValueError(f"Invalid overlap value: {overlap_str}. Expected 'yes' or 'no'.")
+            
+            overlap = overlap_str == "yes"
+
             shift = Shift(
-                day=row["day"],
+                day=day,
                 shift_type=row["shift_type"],
                 start_time=row["start_time"],
                 end_time=row["end_time"],
                 hours=int(row["hours"]),
                 base_required_staff=int(row["required_staff"]),
-                required_staff=0
+                required_staff=0,
+                overlap=overlap,
             )
             shift_structure.add_shift(shift)
 

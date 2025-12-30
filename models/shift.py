@@ -4,7 +4,7 @@ Includes day, shift type, start time, end time, hours, required number of staff
 """
 
 class Shift:
-    """Represents a work shift with attributes such as day, type, start time, end time"""
+    """Represents a work shift with attributes such as day, type, start time, end time etc"""
     def __init__(
         self,
         day: str,
@@ -14,6 +14,7 @@ class Shift:
         hours: int,
         base_required_staff: int,
         required_staff: int,
+        overlap: bool,
         date=None,
         shift_id=None,
         slot_number=None,
@@ -25,6 +26,7 @@ class Shift:
         self.hours = int(hours)
         self.base_required_staff = int(base_required_staff)
         self.required_staff = int(required_staff) # In calendar this will be 1 per slot
+        self.overlap = overlap  # Whether this shift overlaps with others
         self.date = date  # Added date attribute if tied to calendar
         self.shift_id = shift_id  # Unique identifier for the shift
         self.slot_number = slot_number  # For shifts requiring multiple staff
@@ -33,4 +35,5 @@ class Shift:
         return (f"Shift(date={self.date}, "
                 f"day={self.day},  "
                 f"id={self.shift_id}, "
-                f"slot={self.slot_number})")
+                f"slot={self.slot_number}, "
+                f"overlap={self.overlap}, ")
