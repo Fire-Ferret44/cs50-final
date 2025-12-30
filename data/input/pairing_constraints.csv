@@ -1,4 +1,4 @@
-doctor_1,doctor_2,pair_type,overlap_requirement
-H,I,avoid_pair,False
-I,H,avoid_pair,False
-L,senior,requires_pair,True
+doctor_1,doctor_2,pair_type,overlap_required
+H,I,avoid_pair,no
+I,H,avoid_pair,no
+L,senior,requires_pair,yes
