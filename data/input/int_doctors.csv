@@ -1,8 +1,8 @@
-doctor,level
-A,senior
-B,senior
-C,senior
-D,senior
-E,junior
-F,junior
-G,new
+doctor,level,requires_overlap
+A,senior,no
+B,senior,no
+C,senior,no
+D,senior,no
+E,junior,no
+F,junior,no
+G,new,yes
