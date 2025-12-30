@@ -48,7 +48,7 @@ def load_doctors(
     doctors_path: Path,
     leave_path: Path,
     preferences_path: Path,
-    pairing_constraints_path: Path
+    pairing_constraints_path: Path | None = None,
 ) -> dict:
     doctors = {}
     seniors = []
@@ -60,7 +60,21 @@ def load_doctors(
         for row in reader:
             name = row["doctor"]
             experience_level = row["level"].lower()
-            doctors[name] = Doctor(name=name, experience_level=experience_level)
+
+            overlap_str = row.get("requires_overlap", "no").strip().lower()
+            if overlap_str not in ("yes","no"):
+                raise ValueError(
+                    f"Invalid requires_overlap value: {overlap_str}. Expected 'yes' or 'no'."
+                )
+
+            requires_overlap = overlap_str == "yes"
+
+            doctors[name] = Doctor(
+                name=name,
+                experience_level=experience_level,
+                requires_overlap=requires_overlap,
+            )
+
             doctors[name].no_leave_dates = 0  # Initialize leave dates count here outside leave def
             if experience_level == "senior":
                 seniors.append(name)
@@ -80,53 +94,54 @@ def load_doctors(
                 doctors[name].add_leave_date(leave_dates)
                 doctors[name].no_leave_dates = no_leave_dates
 
-    with open(preferences_path, newline='', encoding='utf-8') as file:
-        #Loads preferences
-        reader = csv.DictReader(file)
-        for row in reader:
-            name = row["doctor"]
-            if name not in doctors:
-                continue
-            doctor = doctors[name]
+    if preferences_path is not None and preferences_path.exists():
+        with open(preferences_path, newline='', encoding='utf-8') as file:
+            #Loads preferences
+            reader = csv.DictReader(file)
+            for row in reader:
+                name = row["doctor"]
+                if name not in doctors:
+                    continue
+                doctor = doctors[name]
 
-            # Prefer to avoid a specific weekend
-            if row["avoid_weekend"]:
-                try:
-                    date_str = row["avoid_weekend"].strip()
-                    start_date = parse_date(date_str.strip())
-                    end_date = start_date + timedelta(days=2)
+                # Prefer to avoid a specific weekend
+                if row["avoid_weekend"]:
+                    try:
+                        date_str = row["avoid_weekend"].strip()
+                        start_date = parse_date(date_str.strip())
+                        end_date = start_date + timedelta(days=2)
 
-                    if not is_valid_weekend_range(start_date, end_date):
-                        print(f"Invalid weekend range for {name}: {start_date} to {end_date}")
-                    else:
-                        doctor.preferences["avoid_weekend"] = generate_date_range(start_date, end_date)
+                        if not is_valid_weekend_range(start_date, end_date):
+                            print(f"Invalid weekend range for {name}: {start_date} to {end_date}")
+                        else:
+                            doctor.preferences["avoid_weekend"] = generate_date_range(start_date, end_date)
 
-                except ValueError as e:
-                    print(f"Invalid date format for avoid_weekend in {name}: {e}")
-                except KeyError as e:
-                    print(f"Missing expected column while parsing avoid_weekend for {name}: {e}")
+                    except ValueError as e:
+                        print(f"Invalid date format for avoid_weekend in {name}: {e}")
+                    except KeyError as e:
+                        print(f"Missing expected column while parsing avoid_weekend for {name}: {e}")
 
-            # Prefer to avoid one specific weekday
-            if row["avoid_day"]:
-                try:
-                    doctor.preferences["avoid_day"] = parse_date(row["avoid_day"].strip())
-                except ValueError as e:
-                    print(f"Invalid date format for avoid_day in {name}: {e}")
-                except KeyError as e:
-                    print(f"Missing expected column while parsing avoid_day for {name}: {e}")
+                # Prefer to avoid one specific weekday
+                if row["avoid_day"]:
+                    try:
+                        doctor.preferences["avoid_day"] = parse_date(row["avoid_day"].strip())
+                    except ValueError as e:
+                        print(f"Invalid date format for avoid_day in {name}: {e}")
+                    except KeyError as e:
+                        print(f"Missing expected column while parsing avoid_day for {name}: {e}")
 
-            # Prefer how weekends are distributed (as string: "fri-sun", "sat", "none")
-            doctor.preferences["prefer_distribution_weekend"] = row["prefer_distribution_weekend"].strip().lower()
+                # Prefer how weekends are distributed (as string: "fri-sun", "sat", "none")
+                doctor.preferences["prefer_distribution_weekend"] = row["prefer_distribution_weekend"].strip().lower()
 
-            # Prefer distribution over the month
-            month_pref = row["prefer_distribution_month"].strip().lower()
-            if month_pref:
-                doctor.preferences["prefer_distribution_month"] = get_month_distribution_dates(month_pref, start_date, end_date)
-            else:
-                doctor.preferences["prefer_distribution_month"] = None
+                # Prefer distribution over the month
+                month_pref = row["prefer_distribution_month"].strip().lower()
+                if month_pref:
+                    doctor.preferences["prefer_distribution_month"] = get_month_distribution_dates(month_pref, start_date, end_date)
+                else:
+                    doctor.preferences["prefer_distribution_month"] = None
 
-            # Notes
-            doctor.preferences["notes"] = row["notes"]
+                # Notes
+                doctor.preferences["notes"] = row["notes"]
 
     # Loads pairing constraints
     with open(pairing_constraints_path, newline='', encoding='utf-8') as file:
@@ -134,7 +149,7 @@ def load_doctors(
         for row in reader:
             doc1 = row["doctor_1"]
             doc2 = row["doctor_2"]
-            constraint = row["type"].strip().lower()
+            constraint = row["pair_type"].strip().lower()
 
             if doc1 not in doctors:
                 print(f"Doctor {doc1} not found in doctors list. Skipping constraint.")
@@ -164,7 +179,7 @@ def load_shift_structure(shift_structure_path: Path, filenumber:int) -> ShiftStr
             overlap_str = row["overlap"].strip().lower()
             if overlap_str not in ("yes","no"):
                 raise ValueError(f"Invalid overlap value: {overlap_str}. Expected 'yes' or 'no'.")
-            
+
             overlap = overlap_str == "yes"
 
             shift = Shift(
@@ -196,7 +211,7 @@ def load_public_holidays(public_holidays_path: Path) -> list[date]:
 def load_schedule_period(schedule_period_path: Path, filenumber) -> tuple[date, date]:
     """Loads schedule period from csv"""
     file_path = schedule_period_path / f'schedule_period_{filenumber}.csv' if filenumber else schedule_period_path / 'schedule_period.csv'
-    
+
     with open(file_path, newline='', encoding='utf-8') as file:
         reader = csv.reader(file)
         next(reader, None)  # skip header
@@ -204,6 +219,7 @@ def load_schedule_period(schedule_period_path: Path, filenumber) -> tuple[date, 
         start_str, end_str = line.split(',')
         start_date = datetime.strptime(start_str, "%d-%m-%Y").date()
         end_date = datetime.strptime(end_str, "%d-%m-%Y").date()
+
         return start_date, end_date
 
 def build_schedule_calendar(start_date, end_date, shift_structure, public_holidays):
@@ -211,35 +227,5 @@ def build_schedule_calendar(start_date, end_date, shift_structure, public_holida
     resolver = DayType(public_holidays)
     calendar = ShiftCalendar(start_date, end_date, shift_structure, resolver)
     calendar.build_calendar()
+
     return calendar
-
-
-def load_shift_calendar(data_path: Path, filenumber: int) -> ShiftCalendar:
-    """Builds a shift calendar i.e. number and type of shifts that need to be filled"""
-    file_path = data_path / f'schedule_period_{filenumber}.csv' if (filenumber > 0) else data_path / 'schedule_period.csv'
-    with open(file_path, newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        row = next(reader)
-        start_date = datetime.strptime(row['start_date'], '%d-%m-%Y').date()
-        end_date = datetime.strptime(row['end_date'], '%d-%m-%Y').date()
-
-    shift_structure = ShiftStructure()
-    structure_path = data_path / f'shift_structure_{filenumber}.csv' if (filenumber > 0) else data_path / 'shift_structure.csv'
-    shift_structure.load_from_csv(structure_path) #change for app session number test
-
-    public_holidays = []
-    with open(data_path / 'public_holidays_2025.csv', newline='', encoding='utf-8') as f:
-        reader = csv.DictReader(f)
-        for row in reader:
-            public_holidays.append(datetime.strptime(row['date'], '%d-%m-%Y').date())
-
-    day_type = DayType(public_holidays)
-
-    shift_calendar = ShiftCalendar(
-        start_date=start_date,
-        end_date=end_date,
-        shift_structure=shift_structure,
-        day_type=day_type
-    )
-
-    return shift_calendar
