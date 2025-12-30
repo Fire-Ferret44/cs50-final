@@ -445,9 +445,72 @@ Shift work
 
 Fixed calendar_utils, shift_calendar
 Updated: Shift class and ShiftCalendar class so it works better with reauired_staff and slots in shifts for each day. --> Can use the shift_id in combination with slots for binary checking of people working at the same time.
-Updated: Calendar Utilities and added handling a case where there are multiple public holidays consecutively. 
-
+Updated: Calendar Utilities and added handling a case where there are multiple public holidays consecutively.
 
 ## 24 November 2025
 
-Handling cases for consecutive public holidays. Added how the day of week from the csv input maps to day_type behaviour as well as how public holidays would behave (i.e Saturday or Sunday). Updated ShiftStructure, ShiftCalendar classes to handle new variable names. 
+Handling cases for consecutive public holidays. Added how the day of week from the csv input maps to day_type behaviour as well as how public holidays would behave (i.e Saturday or Sunday). Updated ShiftStructure, ShiftCalendar classes to handle new variable names.
+
+I wonder if the public holiday should also reflect in the shift name --> maybe.
+
+int_model_1
+tested 21 days in april that has 2 public holidays. Mislabels the day before public holiday as a weekday but should actually be a "friday".
+
+## 25 November 2025
+
+Fixed bug with public_holiday block. Now mapping the shift structure with how a day behaves. Instead of "public_holiday" in day_type it will be how a day acts E.g. Sunday or Saturday, then shifts can be mapped accordingly.
+
+
+
+## 14 Dec 2025
+
+maybe rename A as Doctor A e.g. for clarity.
+
+PyENV or Conda (add dependencies like that and they save automatically)
+
+Tailwind (CSS library); robots
+
+venv environment
+
+## 27 Dec 2025
+
+Was suggested on 14 Dec that I should have a virtual environment and local dependencies for each project that I do. Suggested setup:
+python -m venv venv
+.\venv\Scripts\activate
+pip install <packages>
+pip freeze > requirements.txt
+
+completed updating requireents file manually...
+
+## 28 Dec 2025
+
+Activation code to remember for venv:
+source venv/bin/activate
+
+## 29 Dec 2025
+
+A surprise! Due date is looming and I will be away for work 31 Dec and 1 Jan. A problem!
+
+So there is a drastic cut that needs to happen with scope.
+
+MVP:
+-Create a basic solver that balances hours and leave and combination constraints
+-Weekends only if there is more time
+-See that input and output works on flask (update CSV parser as no longer needing ++preferences)
+-Neat print out of data and metadata
+-Remove: Login, Logout etc
+-Remove: SQL storage for now
+
+Tonight rest and tomorrow is D Day!!
+
+## 30 Dec 2025
+
+D-DAY!!
+
+First priority:
+-Getting a basic solver to work
+
+Unary Constraint Decision:
+Important decision for solver and scalability. There is a constraint where a doctor needs supervision from certain other seniors. This could be difficult thing to implement for example: checking the overlap times of different shifts. I have made the decision to add this to the requirements for the csv input so that the onus of declaring "overlap reqired" for certain doctors is worked in there and then having an attribute in the ShiftStructure class that will be a bool True or False whether this is an overlap shift or not. In this way checking whether a doctor cannot work a non-overlap shift will be a unary and not a relational constraint --> making the solver simpler and also making the implementation simpler.
+
+
