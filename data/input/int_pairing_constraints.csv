@@ -1,4 +1,7 @@
-doctor_1,doctor_2,pair_type,overlap_required
-D,E,avoid_pair,no
-E,D,avoid_pair,no
-G,senior,requires_pair,yes
+doctor_1,doctor_2,pair_type
+D,E,avoid_pair
+E,D,avoid_pair
+G,A,requires_pair
+G,B,requires_pair
+G,C,requires_pair
+G,D,requires_pair
