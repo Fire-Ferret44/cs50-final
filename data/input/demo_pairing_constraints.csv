@@ -1,0 +1,7 @@
+doctor_1,doctor_2,pair_type
+D,E,avoid_pair
+E,D,avoid_pair
+H,A,requires_pair
+H,B,requires_pair
+H,C,requires_pair
+H,D,requires_pair
