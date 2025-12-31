@@ -1,0 +1,15 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    : Apology
+{% endblock %}
+
+{% block main %}
+    <header class="heading">Download</header>
+    <p class="standard">
+        Click below to download your file:
+        <form class="standard" method="GET" action="{{ url_for('download') }}" target="_blank">
+            <button type="submit">Download</button>
+    </p>
+{% endblock %}
+    <br>

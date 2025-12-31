@@ -13,30 +13,32 @@
             <div class="logo"><a href="/">Call Roster Generator</a></div>
             <ul>
                 <li><a href="/">Home</a></li>
-                <li><a href="/">Tutorial</a></li>
+                <!--<li><a href="/">Tutorial</a></li> -->
                 <li><a href="{{ url_for('create') }}">Create</a></li>
-                <li><a href="/">About</a></li>
+                <!--<li><a href="/">About</a></li>
                 <li><a href="/">Contact</a></li>
                 <button><a href="/">Sign in</a></button>
-                <button><a href="/">Register</a></button>
+                <button><a href="/">Register</a></button> -->
             </ul>
             </div>
         </div>
     </nav>
-    {% if get_flashed_messages() %}
-        <header>
-            <div class="message"></div>
-                {{ get_flashed_messages() | join(" ") }}
-            </div>
-        </header>
-    {% endif %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <header>
+                <div class="message"></div>
+                    {{ get_flashed_messages() | join(" ") }}
+                </div>
+            </header>
+        {% endif %}
+    {% endwith %}
 
     <main class="container py-5 text-center">
         {% block main %}{% endblock %}
     </main>
     
     <footer class="footer">
-        <p>Call Roster Generator | Created by FireFerret</p>
+        <p>Call Roster Generator | CS50 Project</p>
     </footer>
 
 </body>

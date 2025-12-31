@@ -6,12 +6,14 @@
 
 {% block main %}
     <header class="heading">Roster Generated:</header>
-    <p class="standard">
-        <pre>{{ schedule_text }}</pre>
+    <div class="standard">
+        <h3>Roster:</h3>
+        <pre>{{ schedule_text | safe }}</pre>
         <br>
-        <pre>{{ metadata_text }}</pre>
-        <br><br>
-    </p>
+        <h3>Summary:</h3>
+        <pre>{{ metadata_text | safe }}</pre>
+        <br>
+    </div>
     <p class="standard">
         If you want to regenerate another roster please click below:
     </p>
@@ -19,6 +21,12 @@
             <button type="submit">Generate Again</button>
         </form>
     <br>
+    <p class="standard">
+        If you want to export the above results in a text file please click below:
+    </p>
+        <form class="standard" method="GET" action="{{ url_for('download') }}" target="_blank">
+            <button type="submit">Download</button>
+        </form>
     <p class="standard">
         If you want to go back to the home page please click below:
     </p>

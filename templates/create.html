@@ -6,27 +6,29 @@
 
 {% block main %}
     <header class="heading">Please upload the required files to start:</header>
+    <p class="standard">The current demo uses hard constraints and does not consider preferences.</p>
     <form class="standard" method="POST" action="{{ url_for('create') }}" enctype="multipart/form-data"><br>
         <label for="doctors">Doctor List and Experience Level:</label><br>
         <input type="file" name="doctors" accept=".csv" required>
-            <p class="example">Headings: doctor,level<br>
-            Example: A,senior</p><br>
+            <p class="example">Headings: doctor,level,requires_overlap<br>
+            Example: A,senior,no</p><br>
 
         <label for="leave">Leave Dates:</label><br>
-        <input type="file" name="leave" accept=".csv">
+        <input type="file" name="leave" accept=".csv" required>
             <p class="example">Headings: doctor,start_date,end_date<br>
             Example: A,01-10-2023,10-10-2023</p><br>
 
         <label for="pairing_constraints">Pairing Constraints:</label><br>
-        <input type="file" name="pairing_constraints" accept=".csv"><br>
-            <p class="example">Headings: doctor_1,doctor_2,type<br>
+        <input type="file" name="pairing_constraints" accept=".csv" required><br>
+            <p class="example">Headings: doctor_1,doctor_2,pair_type<br>
             Example: H,I,avoid_pair<br>
-            Example: K,senior,requires_pair</p><br>
+            Example: K,A,requires_pair<br>
+            Example: K,B,requires_pair</p><br>
   
-        <label for="preferences">Preferences:</label><br>
+        <!-- <label for="preferences">Preferences:</label><br>
         <input type="file" name="preferences" accept=".csv" required><br>
             <p class="example">Headings: doctor,avoid_day,avoid_weekend,prefer_distribution_weekend,prefer_distribution_month,notes<br>
-            Example: A,,25-07-2025,fri-sun,begin,</p><br>
+            Example: A,,25-07-2025,fri-sun,begin,</p><br> -->
 
         <label for="schedule_period">Schedule Period:</label><br>
         <input type="file" name="schedule_period" accept=".csv" required><br>
@@ -35,9 +37,9 @@
 
         <label for="shift_structure">Shift Structure:</label><br>
         <input type="file" name="shift_structure" accept=".csv" required><br>
-            <p class="example">Headings: day,shift_type,start_time,end_time,hours,required_staff<br>
-            Example: Monday,short,16:00,20:00,4,1<br>
-            Example: Monday,long,16:00,10:00,14,1</p><br>
+            <p class="example">Headings: day,shift_type,start_time,end_time,hours,required_staff,overlap<br>
+            Example: Monday,short,16:00,20:00,4,1,yes<br>
+            Example: Monday,long,16:00,10:00,14,1,no</p><br>
 
         <button type="submit">Upload</button>
     </form>
