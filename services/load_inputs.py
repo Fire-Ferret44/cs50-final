@@ -47,7 +47,7 @@ def load_doctors(
     #Loads doctors and their attributes
     doctors_path: Path,
     leave_path: Path,
-    preferences_path: Path,
+    preferences_path: Path | None = None,
     pairing_constraints_path: Path | None = None,
 ) -> dict:
     doctors = {}
@@ -208,17 +208,34 @@ def load_public_holidays(public_holidays_path: Path) -> list[date]:
                 holidays.append(datetime.strptime(row[0].strip(), "%d-%m-%Y").date())
     return holidays
 
-def load_schedule_period(schedule_period_path: Path, filenumber) -> tuple[date, date]:
+def load_schedule_period(schedule_period_path: Path) -> tuple[date, date]:
     """Loads schedule period from csv"""
-    file_path = schedule_period_path / f'schedule_period_{filenumber}.csv' if filenumber else schedule_period_path / 'schedule_period.csv'
+    file_path = schedule_period_path
 
-    with open(file_path, newline='', encoding='utf-8') as file:
-        reader = csv.reader(file)
-        next(reader, None)  # skip header
-        line = next(file).strip()
-        start_str, end_str = line.split(',')
-        start_date = datetime.strptime(start_str, "%d-%m-%Y").date()
-        end_date = datetime.strptime(end_str, "%d-%m-%Y").date()
+    with open(file_path, newline='', encoding='utf-8-sig') as file:
+        reader = csv.DictReader(file)
+
+        row = next(reader, None)
+        if row is None:
+            raise ValueError("schedule_period.csv is empty.")
+        
+        if "start_date" not in row or "end_date" not in row:
+            raise ValueError("schedule_period.csv must have start_date and end_date columns.")
+        
+        start_str = row["start_date"].strip()
+        end_str = row["end_date"].strip()
+
+        try:
+            start_date = datetime.strptime(start_str, "%d-%m-%Y").date()
+            end_date = datetime.strptime(end_str, "%d-%m-%Y").date()
+        except ValueError as e:
+            raise ValueError(
+                f"Invalid date in schedule_period.csv."
+                f"Use DD-MM-YYYY format and valid calendar dates. ({e})"
+            )
+
+        if end_date < start_date:
+            raise ValueError("End date cannot be before start date.")
 
         return start_date, end_date
 
