@@ -20,7 +20,7 @@ def generate_schedule(
     leave_path: Path,
     pairing_constraints_path: Path,
     shift_structure_path: Path,
-    public_holidays_path: Path,
+    public_holidays_dir: Path,
 ):
     """Generates a schedule using CSP backtracking search"""
     #1 load doctors ("variables")
@@ -35,7 +35,7 @@ def generate_schedule(
 
     #2.1 get shift slots ("nodes")
     shift_structure = load_shift_structure(shift_structure_path, 0)
-    public_holidays = load_public_holidays(public_holidays_path)
+    public_holidays = load_public_holidays(public_holidays_dir)
     day_type = DayType(public_holidays)
 
     shift_calendar = ShiftCalendar(start_date, end_date, shift_structure, day_type)
@@ -48,7 +48,7 @@ def generate_schedule(
     shift_slots = []
     shift_by_id = {}
 
-    for __, day_info in shift_calendar.calendar.items():
+    for _, day_info in shift_calendar.calendar.items():
         for shift in day_info["shifts"]:
             shift_slots.append(shift.shift_id)
             shift_by_id[shift.shift_id] = shift
@@ -102,6 +102,8 @@ def generate_schedule(
             int_doctors,
             shift_by_id
         )
+        if not domains[shift_id]:
+            raise RuntimeError(f"No available doctors for shift {shift_id} after leave filter")
 
     for shift_id in shift_slots:
         domains[shift_id] = apply_overlap_filter(
@@ -110,6 +112,8 @@ def generate_schedule(
             int_doctors,
             shift_by_id
         )
+        if not domains[shift_id]:
+            raise RuntimeError(f"No available doctors for shift {shift_id} after overlap filter")
 
     #4. CSP solver framework
 
@@ -302,7 +306,7 @@ def generate_schedule(
     if solution is None:
         raise RuntimeError("No valid schedule found")
 
-    #8. Iniitialise metadata tracking for doctors
+    #8. Initialise metadata tracking for doctors
 
     doctor_stats = defaultdict(lambda: {
         "shifts": 0,
@@ -318,4 +322,4 @@ def generate_schedule(
         if is_weekend_shift(shift):
             doctor_stats[doc]["weekend_shifts"] += 1
 
-    return (solution, shift_by_id, doctor_stats)
+    return (solution, shift_by_id, doctor_stats, shift_calendar)
