@@ -27,9 +27,10 @@ Main aim of this model:
 
 from collections import defaultdict
 import random
-from datetime import date, datetime, timedelta
+from datetime import date
 import sys
 from pathlib import Path
+
 
 # Add project root to Python path
 project_root = Path(__file__).parent.parent.parent
@@ -42,7 +43,6 @@ from services.load_inputs import (
     load_shift_structure,
     load_public_holidays,
 )
-
 #base_path = Path("data/input")
 base_path = project_root / "data" / "input"
 
@@ -57,8 +57,8 @@ int_doctors = load_doctors(
 doctors = list(int_doctors.keys())
 
 """2.1 load shift period"""
-start_date = date(2025, 4, 1)
-end_date = date(2025, 4, 21)
+start_date = date(2025, 12, 1)
+end_date = date(2025, 12, 30)
 
 """2.2 get shift slots ("nodes")"""
 shift_structure = load_shift_structure(base_path / "shift_structure.csv", 0)
@@ -77,12 +77,12 @@ for date, day_info in shift_calendar.calendar.items():
 #Sort shift by date - normal sort as ymd format is already "alphabetical"
 shift_slots.sort()
 
-"""3. Generate initial domains for each shift slot"""
+#3. Generate initial domains for each shift slot
 domains = {}
 for shift_id in shift_slots:
     domains[shift_id] = doctors.copy()
 
-"""3.1 Unary constraints"""
+#3.1 Unary constraints
 #3.1a Unary constraints: leave
 def apply_leave_filter(shift_id, domain, int_doctors, shift_by_id):
     """Returns a list of doctors not on leave for the given shift"""
@@ -115,7 +115,7 @@ def apply_overlap_filter(shift_id, domain, int_doctors, shift_by_id):
 
     return valid_docs
 
-"""3.2 Filter by unary constraints"""
+#3.2 Filter by unary constraints
 for shift_id in shift_slots:
     domains[shift_id] = apply_leave_filter(
         shift_id,
@@ -132,12 +132,12 @@ for shift_id in shift_slots:
         shift_by_id
     )
 
-"""4. CSP solver framework"""
+#4. CSP solver framework
 
 assignment = {}
 
 doc_hours = {doc: 0 for doc in doctors} #to track number of assigned hours per doctor
-doc_weekend_hours = {doc: 0 for doc in doctors} #to track number of assigned weekend hours per doctor
+doc_weekend_hours = {doc: 0 for doc in doctors} #to track number of assigned weekend hours per doc
 
 #4.1 Variable Selection: Minimum Remaining Values (MRV)
 def select_unassigned_variable(assignment, domains):
@@ -172,11 +172,12 @@ def order_domain_values(shift_id, domains, doc_hours, doc_weekend_hours, shift_b
         min_weekend_doc = min(candidates, key=lambda doc: doc_weekend_hours[doc])
         lowest_weekend_hours = doc_weekend_hours[min_weekend_doc]
 
-        weekend_candidates = [doc for doc in candidates if doc_weekend_hours[doc] == lowest_weekend_hours]
+        weekend_candidates = [doc for doc in candidates if doc_weekend_hours[doc] ==
+                              lowest_weekend_hours]
         random.shuffle(weekend_candidates)
         return weekend_candidates
 
-"""5. Consistency Checking Functions"""
+#5. Consistency Checking Functions
 #5.1 No doctor two shifts in one day
 def violates_same_day(shift_id, doc, assignment, shift_by_id):
     """Checks if assigning doctor to shift violates same day constraint
@@ -206,7 +207,7 @@ def violates_consecutive_days(shift_id, doc, assignment, shift_by_id):
         assigned_date = shift_by_id[assigned_shift_id].date
         if abs((assigned_date - shift_date).days) == 1: #absolute value of timedelta 1 is consec.
             return True
-    
+
     return False
 
 #5.3 D and E cannot work together
@@ -263,8 +264,9 @@ def violates_requires_pair(shift_id, doc, assignment, shift_by_id, int_doctors):
 
     return True
 
-"""6. Check consistency of assignment"""
+#6. Check consistency of assignment
 def is_consistent(shift_id, doc, assignment, shift_by_id, int_doctors):
+    """Checks if assigning doctor to shift is consistent with all constraints"""
     if violates_same_day(shift_id, doc, assignment, shift_by_id):
         return False
 
@@ -279,7 +281,7 @@ def is_consistent(shift_id, doc, assignment, shift_by_id, int_doctors):
 
     return True
 
-"""7. Backtracking Search Algorithm"""
+#7. Backtracking Search Algorithm
 def backtrack(assignment, domains):
     """Backtracking search algorithm to find a valid assignment"""
     if len(assignment) == len(domains):
@@ -328,7 +330,7 @@ else:
         doctor = solution[shift_id]
         print(f"Shift {shift_id} | Doctor {doctor}")
 
-"""8. Iniitialise metadata tracking for doctors"""
+#8. Iniitialise metadata tracking for doctors
 
 doctor_stats = defaultdict(lambda: {
     "shifts": 0,
@@ -345,4 +347,6 @@ for shift_id, doc in solution.items():
 
 print("\nDoctor Statistics:")
 for doc, stats in doctor_stats.items():
-    print(f"Doctor {doc}: Shifts={stats['shifts']}, Weekend Shifts={stats['weekend_shifts']}, Hours={stats['hours']}")
+    print(f"Doctor {doc}: Shifts={stats['shifts']}",
+          f"Weekend Shifts={stats['weekend_shifts']}",
+          f"Hours={stats['hours']}")
