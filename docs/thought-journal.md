@@ -460,15 +460,9 @@ tested 21 days in april that has 2 public holidays. Mislabels the day before pub
 
 Fixed bug with public_holiday block. Now mapping the shift structure with how a day behaves. Instead of "public_holiday" in day_type it will be how a day acts E.g. Sunday or Saturday, then shifts can be mapped accordingly.
 
-
-
 ## 14 Dec 2025
 
 maybe rename A as Doctor A e.g. for clarity.
-
-PyENV or Conda (add dependencies like that and they save automatically)
-
-Tailwind (CSS library); robots
 
 venv environment
 
@@ -513,4 +507,26 @@ First priority:
 Unary Constraint Decision:
 Important decision for solver and scalability. There is a constraint where a doctor needs supervision from certain other seniors. This could be difficult thing to implement for example: checking the overlap times of different shifts. I have made the decision to add this to the requirements for the csv input so that the onus of declaring "overlap reqired" for certain doctors is worked in there and then having an attribute in the ShiftStructure class that will be a bool True or False whether this is an overlap shift or not. In this way checking whether a doctor cannot work a non-overlap shift will be a unary and not a relational constraint --> making the solver simpler and also making the implementation simpler.
 
+Changed the pairing from inside the csv to clearly say 'A','B','C','D' instead of seniors so there needs to be no senior logic in the solver.
 
+Updated the int_model to load from input files instead of hard-coding
+Updated unary constraints
+Updated the load_doctor function to accept None path for preferences for now
+
+Working basic solver! But the way I have tried to balance it is with number of shifts and not with number of hours, so it is really unbalanced. I am going to change the shift count to hour count and try to fix it that way.
+
+Moved the int_model to the scheduler folder and integrated it with main.py. Changed the logic to count days that behave like a weekend, e.g. public holiday.
+
+Started updating html structures to represent scope better.
+
+## 31 Dec 2025
+
+Last day of the year. Tying up loose ends.
+
+Completing formatter for easier to read output.
+Catching incorrect date input from csv.
+Debugging, Debugging.
+
+I think it's done!!
+
+The last thing is to make a few layout changes on html, files for the demo and then a video.
