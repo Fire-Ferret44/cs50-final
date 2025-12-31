@@ -132,3 +132,5 @@ class DayType:
 def is_valid_weekend_range(start_date, end_date):
     """ Checks if Fri (4) to Sun (6) """
     return start_date.weekday() == 4 and end_date.weekday() == 6
+
+# Code reviewed with ChatGPT

@@ -4,16 +4,16 @@ import csv
 import io
 
 REQUIRED_HEADINGS = {
-    "doctors": ["doctor","level"],
+    "doctors": ["doctor","level","requires_overlap"],
     "leave": ["doctor", "start_date","end_date"],
-    "pairing_constraints": ["doctor_1","doctor_2","type"],
-    "preferences": ["doctor","avoid_day","avoid_weekend","prefer_distribution_weekend","prefer_distribution_month","notes"],
+    "pairing_constraints": ["doctor_1","doctor_2","pair_type"],
     "schedule_period": ["start_date","end_date"],
-    "shift_structure": ["day","shift_type","start_time","end_time","hours","required_staff"]
+    "shift_structure": ["day","shift_type","start_time","end_time","hours",
+                        "required_staff","overlap"]
 }
 
 def validate_if_csv(file) -> bool:
-    """Validate that the file si a csv file."""
+    """Validate that the file is a csv file."""
     return file.filename.endswith(".csv") #currently not very robust but works for now.
 
 
@@ -40,7 +40,7 @@ def validate_headings(file, filename: str) -> tuple[bool, str]:
     except Exception as e:
         return False, f"Could not read {filename}.csv: {e}"
 
-    if actual_headings != expected_headings:
+    if sorted(actual_headings) != sorted(expected_headings):
         return False, (
             f"{filename}.csv has incorrect headers.\n"
             f"Expected: {expected_headings}\n"
@@ -48,4 +48,3 @@ def validate_headings(file, filename: str) -> tuple[bool, str]:
         )
 
     return True, ""
-
